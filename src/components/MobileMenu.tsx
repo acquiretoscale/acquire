@@ -16,7 +16,7 @@ export function MobileMenu() {
   const [isOpen, setIsOpen] = useState(false);
   const [expandedItem, setExpandedItem] = useState<string | null>(null);
 
-  const navItems = site.nav as NavItem[];
+  const navItems = site.nav as unknown as NavItem[];
 
   return (
     <>

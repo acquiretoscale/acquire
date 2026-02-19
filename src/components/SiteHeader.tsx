@@ -10,7 +10,7 @@ export function SiteHeader() {
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-3 py-4 sm:px-4">
         <SiteLogo />
         <nav className="hidden items-center gap-5 text-[11px] font-semibold uppercase tracking-wider md:flex md:gap-6" aria-label="Main navigation">
-          <NavLinks items={site.nav as Parameters<typeof NavLinks>[0]["items"]} />
+          <NavLinks items={site.nav as unknown as Parameters<typeof NavLinks>[0]["items"]} />
           <AwardBadge
             href="/investor-portal"
             customTitle="INVESTOR PORTAL"

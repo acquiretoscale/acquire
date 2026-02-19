@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo, useRef, useState, useEffect } from "react";
+import React, { useCallback, useMemo, useRef, useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import "react-quill-new/dist/quill.snow.css";
 
@@ -470,7 +470,7 @@ export function QuillEditor({
         {/* Quill editor */}
         <div className="[&_.ql-toolbar]:border-t-0 [&_.ql-toolbar]:rounded-none [&_.ql-container]:border-0">
           <ReactQuill
-            ref={quillRef}
+            {...({ ref: quillRef } as object)}
             theme="snow"
             value={value}
             onChange={onChange}

@@ -80,7 +80,7 @@ export const AwardBadge = ({
   compact = false,
   className,
 }: AwardBadgeProps) => {
-  const Icon = iconName ? iconMap[iconName] : undefined;
+  const Icon = iconName && iconName !== "ph" ? iconMap[iconName] : undefined;
   const url = href ?? link ?? "#";
   const uid = React.useId().replace(/:/g, "");
   const isInternal = url.startsWith("/") || url.startsWith("#");
@@ -372,7 +372,6 @@ export const AwardBadge = ({
             ) : Icon ? (
               <foreignObject x="12" y="14" width="26" height="26">
                 <div
-                  xmlns="http://www.w3.org/1999/xhtml"
                   style={{
                     width: "100%",
                     height: "100%",

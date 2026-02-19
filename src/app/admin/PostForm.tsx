@@ -100,7 +100,7 @@ export function PostForm({
   const [featured, setFeatured] = useState(post?.featured ?? false);
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
-  const [savingAs, setSavingAs] = useState<"draft" | "publish" | null>(null);
+  const [savingAs, setSavingAs] = useState<"draft" | "published" | null>(null);
   const [uploadingFeatured, setUploadingFeatured] = useState(false);
 
   /* Autosave state */
