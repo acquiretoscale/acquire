@@ -5,7 +5,7 @@ import "./globals.css";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import { CookieConsent } from "@/components/CookieConsent";
-import { ConnectionBanner } from "@/components/ConnectionBanner";
+
 import { SeoInject } from "@/components/SeoInject";
 import { site } from "@/lib/site";
 import { getSeoSettings } from "@/lib/seo-settings";
@@ -120,7 +120,6 @@ export default async function RootLayout({
           }}
         />
         <div className="min-h-dvh">
-          <ConnectionBanner />
           <SiteHeader />
           <main>{children}</main>
           <SiteFooter />
