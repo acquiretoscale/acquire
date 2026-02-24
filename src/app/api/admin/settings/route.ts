@@ -24,7 +24,7 @@ export async function GET() {
     const supabase = await createClient();
     const { data, error } = await supabase
       .from("site_settings")
-      .select("ga4_measurement_id, google_site_verification, bing_site_verification, ai_optimization_enabled, allow_ai_training, gtm_container_id, facebook_pixel_id, tiktok_pixel_id, google_ads_conversion_id, google_ads_conversion_label, meta_title_override, meta_description_override")
+      .select("ga4_measurement_id, google_site_verification, bing_site_verification, ai_optimization_enabled, allow_ai_training, gtm_container_id, facebook_pixel_id, tiktok_pixel_id, google_ads_conversion_id, google_ads_conversion_label, meta_title_override, meta_description_override, custom_head_scripts")
       .eq("id", SETTINGS_ROW_ID)
       .maybeSingle();
     if (error || !data) {
@@ -56,6 +56,7 @@ export async function GET() {
       googleAdsConversionLabel: data.google_ads_conversion_label ?? null,
       metaTitleOverride: data.meta_title_override ?? null,
       metaDescriptionOverride: data.meta_description_override ?? null,
+      customHeadScripts: data.custom_head_scripts ?? null,
     });
   } catch {
     return NextResponse.json({
@@ -88,6 +89,7 @@ type Body = {
   googleAdsConversionLabel?: string | null;
   metaTitleOverride?: string | null;
   metaDescriptionOverride?: string | null;
+  customHeadScripts?: string | null;
 };
 
 export async function PATCH(request: NextRequest) {
@@ -125,11 +127,12 @@ export async function PATCH(request: NextRequest) {
   if (body.googleAdsConversionLabel !== undefined) updates.google_ads_conversion_label = body.googleAdsConversionLabel?.trim() || null;
   if (body.metaTitleOverride !== undefined) updates.meta_title_override = body.metaTitleOverride?.trim() || null;
   if (body.metaDescriptionOverride !== undefined) updates.meta_description_override = body.metaDescriptionOverride?.trim() || null;
+  if (body.customHeadScripts !== undefined) updates.custom_head_scripts = body.customHeadScripts?.trim() || null;
 
+  // Use upsert so it works even if the settings row doesn't exist yet
   const { error } = await supabase
     .from("site_settings")
-    .update(updates)
-    .eq("id", SETTINGS_ROW_ID);
+    .upsert({ id: SETTINGS_ROW_ID, ...updates }, { onConflict: "id" });
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });

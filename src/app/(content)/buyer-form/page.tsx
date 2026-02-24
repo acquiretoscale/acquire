@@ -160,7 +160,7 @@ export default function BuyerFormPage() {
             <div>
               <h3 className="text-lg font-semibold text-[var(--foreground)]">Target Budget</h3>
               <div className="mt-4 space-y-3">
-                {["$5K–$20K", "$20K–$50K", "$50K–$100K", "$100K+"].map((opt) => (
+                {["$5K–$20K", "$20K–$50K", "$50K–$250K", "$250K+"].map((opt) => (
                   <label key={opt} className="flex items-center gap-3 cursor-pointer">
                     <input
                       type="radio"

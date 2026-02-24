@@ -1,13 +1,20 @@
 import type { Metadata } from "next";
 import { ShimmerLink } from "@/components/ShimmerLink";
 import { getPageContent } from "@/lib/page-content";
-import type { HeroBlock, RichTextBlock, TableBlock, CardsBlock, CtaBlock, FounderBlock } from "@/lib/page-content";
+import type { HeroBlock, RichTextBlock, CtaBlock, FounderBlock } from "@/lib/page-content";
 import { FounderSection } from "@/components/FounderSection";
+
+function renderMd(text: string): string {
+  return text
+    .replace(/\*\*(.*?)\*\*/g, "<strong class='font-semibold text-[var(--foreground)]'>$1</strong>")
+    .replace(/_(.*?)_/g, "<em>$1</em>")
+    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer" class="font-medium text-[var(--accent)] underline-offset-2 hover:underline">$1</a>');
+}
 
 export const metadata: Metadata = {
   title: "About",
   description:
-    "Acquire To Scale democratizes institutional-grade due diligence for online business acquisitions under $100K. Operator-led, practical, and built for scalability.",
+    "Acquire To Scale democratizes institutional-grade due diligence for small online business acquisitions. Operator-led, practical, and built for scalability.",
   alternates: {
     canonical: "/about",
   },
@@ -16,17 +23,14 @@ export const metadata: Metadata = {
 export default async function AboutPage() {
   const content = await getPageContent("about");
   const hero = content.hero as HeroBlock;
-  const mission = content.mission as RichTextBlock;
-  const comparison = content.comparison_table as TableBlock;
-  const philosophy = content.philosophy as RichTextBlock;
-  const whyChoose = content.why_choose as CardsBlock;
+  const companyIntro = content.company_intro as RichTextBlock;
   const clarityCta = content.clarity_cta as CtaBlock;
   const founder = content.founder as FounderBlock;
 
   return (
     <div className="bg-[var(--background)] text-[var(--foreground)]">
       {/* Hero */}
-      <section data-cms-block="about/hero" className="border-b border-[var(--border)] py-16 md:py-20">
+      <section data-cms-block="about/hero" className="border-b border-[var(--border)] py-10 md:py-14">
         <div className="mx-auto max-w-3xl px-4">
           <p className="text-base font-medium uppercase tracking-wider text-[var(--muted)]">{hero.label}</p>
           <h1 className="mt-3 text-4xl font-bold tracking-tight md:text-5xl">
@@ -36,101 +40,17 @@ export default async function AboutPage() {
         </div>
       </section>
 
-      {/* Our Mission */}
-      <section id="our-mission" data-cms-block="about/mission" className="scroll-mt-20 py-12 md:py-16">
+      {/* About the company */}
+      <section data-cms-block="about/company_intro" className="border-t border-[var(--border)] py-8 md:py-12">
         <div className="mx-auto max-w-3xl px-4">
-          <h2 className="text-2xl font-bold tracking-tight text-[var(--foreground)] md:text-3xl">
-            {mission.heading}
-          </h2>
-          <div className="mt-6 space-y-6 text-lg leading-relaxed text-[var(--muted)]">
-            {mission.paragraphs.map((p, i) => (
-              <p key={i}>{p}</p>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Comparison Table */}
-      <section data-cms-block="about/comparison_table" className="border-t border-[var(--border)] bg-[var(--card)] py-12 md:py-16">
-        <div className="mx-auto max-w-5xl px-4">
-          <h2 className="text-2xl font-bold tracking-tight text-[var(--foreground)] md:text-3xl">
-            {comparison.heading}
-          </h2>
-          <p className="mt-4 max-w-3xl text-[var(--muted)] leading-relaxed">
-            {comparison.intro}
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--accent)]">
+            {companyIntro.heading}
           </p>
-          <div className="mt-8 overflow-x-auto rounded-xl border border-[var(--border)] bg-white shadow-sm">
-            <table className="w-full min-w-[640px] text-left text-sm">
-              <thead>
-                <tr className="border-b border-[var(--border)] bg-[var(--card-hover)]">
-                  {comparison.headers.map((header, i) => (
-                    <th
-                      key={i}
-                      className={`px-4 py-4 font-semibold ${i === comparison.headers.length - 1 ? "text-[var(--accent)]" : "text-[var(--foreground)]"}`}
-                    >
-                      {header}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {comparison.rows.map((row, i) => (
-                  <tr
-                    key={i}
-                    className={`border-b border-[var(--border)] ${i % 2 === 0 ? "bg-white" : "bg-[var(--card-hover)]/50"}`}
-                  >
-                    {row.map((cell, j) => (
-                      <td
-                        key={j}
-                        className={`px-4 py-4 ${j === 0 ? "font-medium text-[var(--foreground)]" : j === row.length - 1 ? "font-medium text-[var(--foreground)]" : "text-[var(--muted)]"}`}
-                      >
-                        {cell}
-                      </td>
-                    ))}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          {comparison.footer_note && (
-            <p className="mt-6 text-base italic text-[var(--muted)]">
-              {comparison.footer_note}
-            </p>
-          )}
-        </div>
-      </section>
-
-      {/* Philosophy */}
-      <section data-cms-block="about/philosophy" className="py-12 md:py-16">
-        <div className="mx-auto max-w-3xl px-4">
-          <h2 className="text-2xl font-bold tracking-tight text-[var(--foreground)] md:text-3xl">
-            {philosophy.heading}
-          </h2>
-          <div className="mt-6 space-y-6 text-lg leading-relaxed text-[var(--muted)]">
-            {philosophy.paragraphs.map((p, i) => (
-              <p key={i}>{p}</p>
+          <div className="mt-5 space-y-5 text-lg leading-relaxed text-[var(--muted)]">
+            {companyIntro.paragraphs.map((p, i) => (
+              <p key={i} dangerouslySetInnerHTML={{ __html: renderMd(p) }} />
             ))}
           </div>
-        </div>
-      </section>
-
-      {/* Why Choose */}
-      <section data-cms-block="about/why_choose" className="border-t border-[var(--border)] py-12 md:py-16">
-        <div className="mx-auto max-w-4xl px-4">
-          <h2 className="text-2xl font-bold tracking-tight text-[var(--foreground)] md:text-3xl">
-            {whyChoose.heading}
-          </h2>
-          <ul className="mt-8 grid gap-6 sm:grid-cols-2" role="list">
-            {whyChoose.cards.map((item) => (
-              <li key={item.title} className="flex gap-4 rounded-xl border border-[var(--border)] bg-[var(--card)] p-6 shadow-sm">
-                <span className="mt-1 h-2 w-2 shrink-0 rounded-full bg-[var(--accent)]" aria-hidden />
-                <div>
-                  <h3 className="font-semibold text-[var(--foreground)]">{item.title}</h3>
-                  <p className="mt-2 text-[var(--muted)] leading-relaxed">{item.desc}</p>
-                </div>
-              </li>
-            ))}
-          </ul>
         </div>
       </section>
 

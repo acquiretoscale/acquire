@@ -8,7 +8,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "db:migrate": "node scripts/run-supabase-migrations.js"
+    "db:migrate": "node scripts/run-supabase-migrations.js",
+    "db:seed-blog": "node scripts/seed-operators-playbook.js"
   },
   "dependencies": {
     "@supabase/ssr": "^0.5.2",

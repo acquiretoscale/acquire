@@ -44,6 +44,55 @@ body {
   color: var(--foreground);
 }
 
+/* Blog article body: spacing */
+.blog-article-body table {
+  display: block;
+  overflow-x: auto;
+}
+.blog-article-body pre {
+  overflow-x: auto;
+}
+.blog-article-body .prose {
+  line-height: 1.8;
+}
+.blog-article-body .prose p {
+  margin-top: 1.5em;
+  margin-bottom: 1.5em;
+}
+.blog-article-body .prose p:first-of-type {
+  margin-top: 0;
+}
+.blog-article-body .prose h2 {
+  margin-top: 2.25em;
+  margin-bottom: 0.75em;
+}
+.blog-article-body .prose h2:first-child {
+  margin-top: 0;
+}
+.blog-article-body .prose h3 {
+  margin-top: 1.75em;
+  margin-bottom: 0.5em;
+}
+.blog-article-body .prose ul,
+.blog-article-body .prose ol {
+  margin-top: 1.25em;
+  margin-bottom: 1.5em;
+  padding-left: 1.5rem;
+}
+.blog-article-body .prose li {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+.blog-article-body .prose hr {
+  margin-top: 2.5em;
+  margin-bottom: 2.5em;
+}
+.blog-article-body .prose blockquote {
+  margin-top: 1.5em;
+  margin-bottom: 1.5em;
+  padding: 1.25em 1.5em;
+}
+
 /* Content pages: light background, dark blue accent for links and buttons */
 [data-theme="content"] {
   --background: #f8fafc;
@@ -167,16 +216,42 @@ footer {
 
 /* Prose / blog typography (replaces @tailwindcss/typography for v4 compatibility) */
 .prose {
-  line-height: 1.75;
+  color: var(--foreground);
+  font-size: 1.125rem;
+  line-height: 1.8;
 }
-.prose h1,
-.prose h2,
-.prose h3 {
+.prose > * + * {
+  margin-top: 1.25em;
+}
+.prose h1 {
+  font-size: 2em;
+  font-weight: 700;
   letter-spacing: -0.02em;
+  line-height: 1.3;
+  margin-top: 0;
+  margin-bottom: 0.75em;
+  color: var(--foreground);
+}
+.prose h2 {
+  font-size: 1.5em;
   font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.35;
+  color: var(--foreground);
+}
+.prose h3 {
+  font-size: 1.2em;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.4;
+  color: var(--foreground);
 }
 .prose p {
-  color: var(--muted);
+  color: var(--foreground);
+}
+.prose strong {
+  font-weight: 600;
+  color: var(--foreground);
 }
 .prose a {
   color: var(--accent);
@@ -217,14 +292,36 @@ footer {
 .prose ul,
 .prose ol {
   padding-left: 1.5rem;
+  color: var(--foreground);
+}
+.prose ul {
+  list-style-type: disc;
+}
+.prose ol {
+  list-style-type: decimal;
+}
+.prose li {
+  color: var(--foreground);
+}
+.prose li::marker {
   color: var(--muted);
 }
 .prose blockquote {
-  border-left: 4px solid var(--border);
-  padding-left: 1rem;
+  border-left: 4px solid var(--accent);
+  padding: 1em 1.25em;
   margin-left: 0;
+  margin-right: 0;
   color: var(--muted);
   font-style: italic;
+  background: var(--card);
+  border-radius: 0 0.5rem 0.5rem 0;
+}
+.prose blockquote strong {
+  color: var(--foreground);
+}
+.prose hr {
+  border: none;
+  border-top: 1px solid var(--border);
 }
 .prose pre,
 .prose code {

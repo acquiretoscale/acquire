@@ -15,7 +15,9 @@ import type {
   BulletCardBlock,
   AssetFocusBlock,
   WhyUsBlock,
+  FounderBlock,
 } from "@/lib/page-content";
+import { FounderSection } from "@/components/FounderSection";
 
 export default async function Home() {
   const content = await getPageContent("home");
@@ -28,6 +30,7 @@ export default async function Home() {
   const buyersScenario = content.buyers_scenario as BulletCardBlock;
   const sellersScenario = content.sellers_scenario as BulletCardBlock;
   const whyUs = content.why_us as WhyUsBlock;
+  const founder = content.founder as FounderBlock;
 
   return (
     <div className="bg-[var(--background)] text-[var(--foreground)]">
@@ -357,44 +360,8 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* Why us */}
-      <section
-        data-cms-block="home/why_us"
-        className="border-t border-white/10 bg-[var(--surface-dark-2)] py-12 md:py-16"
-      >
-        <div className="mx-auto max-w-6xl px-3 sm:px-4 md:px-6">
-          <div className="rounded-2xl border border-white/10 bg-[var(--card)] p-8 shadow-xl md:p-10">
-            <h2 className="text-2xl font-bold tracking-tight text-white md:text-3xl">
-              {whyUs.heading}
-            </h2>
-            <ul className="mt-6 list-inside list-disc space-y-3 text-base text-[var(--on-dark-muted)] leading-relaxed" role="list">
-              {whyUs.bullets.map((b, i) => (
-                <li key={i}>{b}</li>
-              ))}
-            </ul>
-            <p className="mt-8 text-lg font-semibold text-white">
-              {whyUs.bold_statement}
-            </p>
-            <p className="mt-4 text-base text-[var(--on-dark-muted)] leading-relaxed">
-              {whyUs.body}
-            </p>
-            <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-              <Link
-                href={whyUs.cta_primary.href}
-                className="inline-flex h-11 items-center justify-center rounded-full bg-[var(--accent)] px-6 font-semibold text-[var(--surface-dark)] transition hover:bg-[var(--accent-hover)]"
-              >
-                {whyUs.cta_primary.label}
-              </Link>
-              <Link
-                href={whyUs.cta_secondary.href}
-                className="inline-flex h-11 items-center justify-center rounded-full border border-white/40 px-6 font-semibold text-white transition hover:bg-white/10"
-              >
-                {whyUs.cta_secondary.label}
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* About the Founder (home duplicate — edit in Admin → Pages → Home) */}
+      <FounderSection founder={founder} dataCmsBlock="home/founder" />
 
       {/* Featured Blog Articles */}
       <FeaturedArticles />

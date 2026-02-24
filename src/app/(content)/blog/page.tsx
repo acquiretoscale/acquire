@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { site } from "@/lib/site";
 import { getAllPosts } from "@/lib/blog";
 import { getAllSupabasePosts } from "@/lib/supabase-blog";
@@ -13,6 +14,12 @@ export const metadata: Metadata = {
   },
 };
 
+function readingTimeFromHtml(html: string): number {
+  const text = html.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
+  const words = text.split(" ").filter(Boolean).length;
+  return Math.max(1, Math.ceil(words / 200));
+}
+
 type ListItem = {
   slug: string;
   title: string;
@@ -20,6 +27,7 @@ type ListItem = {
   date: string;
   updated?: string;
   readingTimeMinutes: number;
+  featuredImage?: string | null;
 };
 
 export default async function BlogPage() {
@@ -39,12 +47,15 @@ export default async function BlogPage() {
     slug: p.slug,
     title: p.title,
     description: p.meta_description || "",
-    date: p.created_at,
+    date: p.published_at || p.created_at,
     updated: p.updated_at,
-    readingTimeMinutes: 1,
+    readingTimeMinutes: readingTimeFromHtml(p.content),
+    featuredImage: p.featured_image,
   }));
 
-  const posts: ListItem[] = [...fileItems, ...supabaseItems].sort(
+  const supabaseSlugs = new Set(supabaseItems.map((p) => p.slug));
+  const fileItemsFiltered = fileItems.filter((p) => !supabaseSlugs.has(p.slug));
+  const posts: ListItem[] = [...fileItemsFiltered, ...supabaseItems].sort(
     (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
   );
 
@@ -75,9 +86,22 @@ export default async function BlogPage() {
             <ul className="space-y-6" role="list">
               {posts.map((post) => (
                 <li key={post.slug}>
-                  <article className="card-elevated rounded-2xl p-8 transition hover:shadow-md">
-                    <div className="space-y-3">
-                      <div className="flex flex-wrap items-center gap-3 text-base text-[var(--muted)]">
+                  <article className="card-elevated overflow-hidden rounded-2xl transition hover:shadow-md">
+                    {post.featuredImage && (
+                      <Link href={`/blog/${post.slug}`} className="block">
+                        <div className="relative aspect-[2.4/1] w-full">
+                          <Image
+                            src={post.featuredImage}
+                            alt={post.title}
+                            fill
+                            className="object-cover"
+                            sizes="(max-width: 768px) 100vw, 896px"
+                          />
+                        </div>
+                      </Link>
+                    )}
+                    <div className="space-y-3 p-8">
+                      <div className="flex flex-wrap items-center gap-3 text-sm text-[var(--muted)]">
                         <time dateTime={post.date}>
                           {new Date(post.date).toLocaleDateString("en-US", {
                             year: "numeric",
@@ -87,19 +111,6 @@ export default async function BlogPage() {
                         </time>
                         <span aria-hidden>·</span>
                         <span>{post.readingTimeMinutes} min read</span>
-                        {post.updated && (
-                          <>
-                            <span aria-hidden>·</span>
-                            <span>
-                              Updated{" "}
-                              {new Date(post.updated).toLocaleDateString("en-US", {
-                                year: "numeric",
-                                month: "short",
-                                day: "numeric",
-                              })}
-                            </span>
-                          </>
-                        )}
                       </div>
                       <h2 className="text-2xl font-bold tracking-tight">
                         <Link
@@ -109,10 +120,12 @@ export default async function BlogPage() {
                           {post.title}
                         </Link>
                       </h2>
-                      <p className="text-[var(--muted)] leading-relaxed">{post.description}</p>
+                      {post.description && (
+                        <p className="text-[var(--muted)] leading-relaxed">{post.description}</p>
+                      )}
                       <Link
                         href={`/blog/${post.slug}`}
-                        className="inline-block text-base font-semibold text-[var(--accent)] hover:underline"
+                        className="inline-block text-sm font-semibold text-[var(--accent)] hover:underline"
                       >
                         Read more →
                       </Link>

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { QuillEditor } from "@/components/editor/QuillEditor";
+import { sanitizeBlogHtmlForSave as sanitizeBlogHtml } from "@/lib/sanitize-blog-html";
 
 /* ------------------------------------------------------------------ */
 /*  Autosave helpers                                                   */
@@ -74,6 +75,10 @@ type PostRow = {
   featured_image: string | null;
   featured?: boolean;
   status?: string;
+  author_name?: string | null;
+  author_bio?: string | null;
+  author_image?: string | null;
+  published_at?: string | null;
 };
 
 /* ------------------------------------------------------------------ */
@@ -90,7 +95,9 @@ export function PostForm({
   const router = useRouter();
   const [title, setTitle] = useState(post?.title ?? "");
   const [slug, setSlug] = useState(post?.slug ?? "");
-  const [content, setContent] = useState(post?.content ?? "");
+  const [content, setContent] = useState(
+    () => sanitizeBlogHtml(post?.content ?? "")
+  );
   const [metaDescription, setMetaDescription] = useState(
     post?.meta_description ?? ""
   );
@@ -98,6 +105,15 @@ export function PostForm({
     post?.featured_image ?? ""
   );
   const [featured, setFeatured] = useState(post?.featured ?? false);
+  const [publishedAt, setPublishedAt] = useState(() => {
+    if (post?.published_at) {
+      return new Date(post.published_at).toISOString().slice(0, 16);
+    }
+    return new Date().toISOString().slice(0, 16);
+  });
+  const [authorName, setAuthorName] = useState(post?.author_name ?? "");
+  const [authorBio, setAuthorBio] = useState(post?.author_bio ?? "");
+  const [authorImage, setAuthorImage] = useState(post?.author_image ?? "");
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [savingAs, setSavingAs] = useState<"draft" | "published" | "archived" | null>(null);
@@ -122,7 +138,7 @@ export function PostForm({
       if (draft && (draft.title || draft.content || draft.slug)) {
       setTitle(draft.title);
       setSlug(draft.slug);
-      setContent(draft.content);
+      setContent(sanitizeBlogHtml(draft.content));
       setMetaDescription(draft.meta_description);
       setFeaturedImage(draft.featured_image);
       setFeatured(draft.featured);
@@ -138,7 +154,7 @@ export function PostForm({
       saveDraftToStorage({
         title,
         slug,
-        content,
+        content: sanitizeBlogHtml(content),
         meta_description: metaDescription,
         featured_image: featuredImage,
         featured,
@@ -212,7 +228,7 @@ export function PostForm({
           body: JSON.stringify({
             title,
             slug: resolvedSlug,
-            content,
+            content: sanitizeBlogHtml(content),
             meta_description: metaDescription || undefined,
             featured_image: featuredImage || undefined,
             featured,
@@ -239,20 +255,48 @@ export function PostForm({
     }
 
     const supabase = createClient();
-    const base = {
+    const sanitizedContent = sanitizeBlogHtml(content);
+    const core = {
       title,
       slug: resolvedSlug,
-      content,
+      content: sanitizedContent,
       meta_description: metaDescription || null,
       featured_image: featuredImage || null,
       featured,
       status,
     };
+    const base = {
+      ...core,
+      published_at: new Date(publishedAt).toISOString(),
+      author_name: authorName.trim() || null,
+      author_bio: authorBio.trim() || null,
+      author_image: authorImage.trim() || null,
+    };
+    const baseWithoutAuthor = { ...core };
+    const isSchemaError = (msg: string) =>
+      /author_name|author_bio|author_image|published_at|schema cache/i.test(msg);
+
     if (post) {
       const { error: err } = await supabase
         .from("blog_posts")
         .update({ ...base, updated_at: new Date().toISOString() })
         .eq("id", post.id);
+      if (err && isSchemaError(err.message)) {
+        const { error: retryErr } = await supabase
+          .from("blog_posts")
+          .update({ ...baseWithoutAuthor, updated_at: new Date().toISOString() })
+          .eq("id", post.id);
+        if (retryErr) {
+          setError(retryErr.message);
+        } else {
+          setError(
+            "Post saved, but author fields were not saved. Run the SQL below in Supabase → SQL Editor, then edit this post again to save author."
+          );
+        }
+        setSaving(false);
+        setSavingAs(null);
+        return;
+      }
       if (err) {
         setError(err.message);
         setSaving(false);
@@ -263,6 +307,19 @@ export function PostForm({
       router.push("/admin");
     } else {
       const { error: err } = await supabase.from("blog_posts").insert(base);
+      if (err && isSchemaError(err.message)) {
+        const { error: retryErr } = await supabase.from("blog_posts").insert(baseWithoutAuthor);
+        if (retryErr) {
+          setError(retryErr.message);
+        } else {
+          setError(
+            "Post saved, but author fields were not saved. Run the SQL below in Supabase → SQL Editor, then edit this post again to save author."
+          );
+        }
+        setSaving(false);
+        setSavingAs(null);
+        return;
+      }
       if (err) {
         setError(err.message);
         setSaving(false);
@@ -291,15 +348,6 @@ export function PostForm({
       }}
       className="mt-6 space-y-6"
     >
-      {error && (
-        <p
-          className="rounded-lg bg-red-50 p-3 text-sm text-red-700"
-          role="alert"
-        >
-          {error}
-        </p>
-      )}
-
       {/* Title */}
       <div>
         <label
@@ -336,6 +384,26 @@ export function PostForm({
         />
         <p className="mt-1 text-xs text-[var(--muted)]">
           Used in URL: /blog/[slug]
+        </p>
+      </div>
+
+      {/* Published date */}
+      <div>
+        <label
+          htmlFor="post-published-at"
+          className="block text-sm font-medium text-[var(--foreground)]"
+        >
+          Publish date
+        </label>
+        <input
+          id="post-published-at"
+          type="datetime-local"
+          value={publishedAt}
+          onChange={(e) => setPublishedAt(e.target.value)}
+          className="mt-1 w-full max-w-xs rounded-lg border border-[var(--border)] bg-white px-3 py-2 text-sm text-[var(--foreground)] focus:border-[var(--accent)] focus:outline-none focus:ring-1 focus:ring-[var(--accent)]"
+        />
+        <p className="mt-1 text-xs text-[var(--muted)]">
+          Controls the displayed date on the blog. Defaults to now.
         </p>
       </div>
 
@@ -420,6 +488,53 @@ export function PostForm({
         </label>
       </div>
 
+      {/* Author block */}
+      <div className="rounded-xl border border-[var(--border)] bg-[var(--card)] p-5 space-y-4">
+        <div>
+          <p className="text-sm font-semibold text-[var(--foreground)]">Author</p>
+          <p className="mt-0.5 text-xs text-[var(--muted)]">Shown at the bottom of the post. Leave blank to hide the author block.</p>
+        </div>
+        <div>
+          <label htmlFor="author-name" className="block text-sm font-medium text-[var(--foreground)]">
+            Name
+          </label>
+          <input
+            id="author-name"
+            type="text"
+            value={authorName}
+            onChange={(e) => setAuthorName(e.target.value)}
+            placeholder="e.g. Adil Maf"
+            className="mt-1 w-full max-w-sm rounded-lg border border-[var(--border)] bg-white px-3 py-2 text-sm text-[var(--foreground)] focus:border-[var(--accent)] focus:outline-none focus:ring-1 focus:ring-[var(--accent)]"
+          />
+        </div>
+        <div>
+          <label htmlFor="author-bio" className="block text-sm font-medium text-[var(--foreground)]">
+            Short bio <span className="text-[var(--muted)] font-normal">(optional)</span>
+          </label>
+          <textarea
+            id="author-bio"
+            value={authorBio}
+            onChange={(e) => setAuthorBio(e.target.value)}
+            placeholder="Founder & Business architect at Acquire To Scale."
+            rows={2}
+            className="mt-1 w-full rounded-lg border border-[var(--border)] bg-white px-3 py-2 text-sm text-[var(--foreground)] focus:border-[var(--accent)] focus:outline-none focus:ring-1 focus:ring-[var(--accent)]"
+          />
+        </div>
+        <div>
+          <label htmlFor="author-image" className="block text-sm font-medium text-[var(--foreground)]">
+            Photo URL <span className="text-[var(--muted)] font-normal">(optional — leave blank to use default founder photo)</span>
+          </label>
+          <input
+            id="author-image"
+            type="text"
+            value={authorImage}
+            onChange={(e) => setAuthorImage(e.target.value)}
+            placeholder="/images/adilmaf.png"
+            className="mt-1 w-full rounded-lg border border-[var(--border)] bg-white px-3 py-2 text-sm font-mono text-[var(--foreground)] focus:border-[var(--accent)] focus:outline-none focus:ring-1 focus:ring-[var(--accent)]"
+          />
+        </div>
+      </div>
+
       {/* Content editor */}
       <div>
         <label className="block text-sm font-medium text-[var(--foreground)]">
@@ -457,8 +572,26 @@ export function PostForm({
         </div>
       )}
 
-      {/* Action bar: autosave indicator + buttons */}
-      <div className="flex flex-wrap items-center gap-3">
+      {/* Action bar: error (next to buttons so it's visible when saving) + buttons */}
+      <div className="flex flex-col gap-4">
+        {error && (
+          <div
+            className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-800"
+            role="alert"
+          >
+            <p className="font-semibold">Save failed</p>
+            <p className="mt-1">{error}</p>
+            {(error.includes("author_") || error.includes("schema cache") || error.includes("author fields were not saved")) && (
+              <p className="mt-3 text-xs">
+                Run this in Supabase → SQL Editor to add the Author columns:{" "}
+                <code className="mt-1 block rounded bg-red-100 p-2 font-mono text-[10px]">
+                  alter table public.blog_posts add column if not exists author_name text, add column if not exists author_bio text, add column if not exists author_image text;
+                </code>
+              </p>
+            )}
+          </div>
+        )}
+        <div className="flex flex-wrap items-center gap-3">
         {/* Publish */}
         <button
           type="submit"
@@ -525,6 +658,7 @@ export function PostForm({
             {savedLabel}
           </span>
         )}
+        </div>
       </div>
     </form>
   );

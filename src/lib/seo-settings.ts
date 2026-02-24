@@ -16,6 +16,7 @@ export type SeoSettings = {
   googleAdsConversionLabel: string | null;
   metaTitleOverride: string | null;
   metaDescriptionOverride: string | null;
+  customHeadScripts: string | null;
 };
 
 const DEFAULT_SETTINGS: SeoSettings = {
@@ -31,6 +32,7 @@ const DEFAULT_SETTINGS: SeoSettings = {
   googleAdsConversionLabel: null,
   metaTitleOverride: null,
   metaDescriptionOverride: null,
+  customHeadScripts: null,
 };
 
 const SETTINGS_ROW_ID = "00000000-0000-0000-0000-000000000001";
@@ -47,7 +49,7 @@ export async function getSeoSettings(): Promise<SeoSettings> {
     const supabase = await createClient();
     const query = supabase
       .from("site_settings")
-      .select("ga4_measurement_id, google_site_verification, bing_site_verification, ai_optimization_enabled, allow_ai_training, gtm_container_id, facebook_pixel_id, tiktok_pixel_id, google_ads_conversion_id, google_ads_conversion_label, meta_title_override, meta_description_override")
+      .select("ga4_measurement_id, google_site_verification, bing_site_verification, ai_optimization_enabled, allow_ai_training, gtm_container_id, facebook_pixel_id, tiktok_pixel_id, google_ads_conversion_id, google_ads_conversion_label, meta_title_override, meta_description_override, custom_head_scripts")
       .eq("id", SETTINGS_ROW_ID)
       .maybeSingle();
     const { data, error } = await Promise.race([
@@ -70,6 +72,7 @@ export async function getSeoSettings(): Promise<SeoSettings> {
       googleAdsConversionLabel: (data.google_ads_conversion_label as string) ?? null,
       metaTitleOverride: (data.meta_title_override as string) ?? null,
       metaDescriptionOverride: (data.meta_description_override as string) ?? null,
+      customHeadScripts: (data.custom_head_scripts as string) ?? null,
     };
   } catch {
     return {

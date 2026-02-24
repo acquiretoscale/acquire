@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { isDemoMode } from "@/lib/admin-demo";
 import { getAllPosts } from "@/lib/blog";
+import { PostsList } from "./posts/PostsList";
 
 export default async function AdminPage() {
   const demoMode = isDemoMode();
@@ -49,7 +50,7 @@ export default async function AdminPage() {
 
   const { data: posts } = await supabase
     .from("blog_posts")
-    .select("id, title, slug, status, created_at")
+    .select("id, title, slug, status, featured, created_at")
     .order("created_at", { ascending: false });
 
   return (
@@ -64,38 +65,12 @@ export default async function AdminPage() {
       >
         New post
       </Link>
-      {posts && posts.length > 0 && (
-        <ul className="mt-8 space-y-3" role="list">
-          {posts.map((post) => (
-            <li key={post.id} className="flex items-center justify-between rounded-lg border border-[var(--border)] bg-[var(--card)] px-4 py-3">
-              <div className="flex items-center gap-2">
-                <span className="font-medium text-[var(--foreground)]">{post.title}</span>
-                <span className="ml-1 text-sm text-[var(--muted)]">/blog/{post.slug}</span>
-                {post.status === "draft" && (
-                  <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-amber-700">
-                    Draft
-                  </span>
-                )}
-                {post.status === "archived" && (
-                  <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-slate-600">
-                    Archived
-                  </span>
-                )}
-                {post.status !== "draft" && post.status !== "archived" && (
-                  <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-emerald-700">
-                    Published
-                  </span>
-                )}
-              </div>
-              <Link
-                href={`/admin/posts/${post.id}/edit`}
-                className="text-sm font-medium text-[var(--accent)] hover:underline"
-              >
-                Edit
-              </Link>
-            </li>
-          ))}
-        </ul>
+      {posts && posts.length > 0 ? (
+        <PostsList posts={posts} />
+      ) : (
+        <p className="mt-8 rounded-xl border border-[var(--border)] bg-[var(--card)] px-6 py-8 text-center text-[var(--muted)]">
+          No blog posts yet. Click <strong className="text-[var(--foreground)]">New post</strong> to create one.
+        </p>
       )}
     </section>
   );

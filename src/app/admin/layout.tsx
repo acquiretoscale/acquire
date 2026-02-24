@@ -18,6 +18,9 @@ export default async function AdminLayout({
               Admin
             </Link>
             <div className="flex items-center gap-4 text-sm">
+              <Link href="/admin" className="text-[var(--foreground)] hover:text-[var(--accent)]">
+                Blog posts
+              </Link>
               <Link href="/admin/posts/new" className="text-[var(--accent)] hover:underline">
                 New post
               </Link>
@@ -59,6 +62,9 @@ export default async function AdminLayout({
               Admin
             </Link>
             <div className="flex items-center gap-4 text-sm">
+              <Link href="/admin" className="text-[var(--foreground)] hover:text-[var(--accent)]">
+                Blog posts
+              </Link>
               <Link href="/admin/posts/new" className="text-[var(--accent)] hover:underline">
                 New post
               </Link>

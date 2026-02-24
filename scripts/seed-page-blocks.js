@@ -39,15 +39,15 @@ const SEED_BLOCKS = [
   {
     page_slug: "home", block_key: "buyer_side", block_type: "list", sort_order: 3,
     content: {
-      title: "BUYER-SIDE",
+      title: "Founder title: "BUYER-SIDE" Business architect",
       intro: "Buy your first (or next) online business without the expensive lesson. We find the red flags marketplaces ignore and brokers hide.",
       items: [
-        { title: "Buyer fit assessment", desc: "Ensuring the deal matches your capital, skills, and risk tolerance" },
-        { title: "Deal review & due diligence", desc: "Filter bad deals fast: sanity checks, red flags, and risk assessment" },
-        { title: "Tech stack & traffic", desc: "Scalability, automation potential, and ease of delegation post-acquisition" },
-        { title: "P&L & valuation", desc: "Monetization quality, margins, and owner dependency" },
-        { title: "Post-acquisition operations & scaling", desc: "What breaks, what to fix first, and where to focus" },
-        { title: "Deal sourcing", desc: "Access to private and off-market opportunities" },
+        { title: "Founder title: "Buyer fit assessment" Business architect", desc: "Ensuring the deal matches your capital, skills, and risk tolerance" },
+        { title: "Founder title: "Deal review & due diligence" Business architect", desc: "Filter bad deals fast: sanity checks, red flags, and risk assessment" },
+        { title: "Founder title: "Tech stack & traffic" Business architect", desc: "Scalability, automation potential, and ease of delegation post-acquisition" },
+        { title: "Founder title: "P&L & valuation" Business architect", desc: "Monetization quality, margins, and owner dependency" },
+        { title: "Founder title: "Post-acquisition operations & scaling" Business architect", desc: "What breaks, what to fix first, and where to focus" },
+        { title: "Founder title: "Deal sourcing" Business architect", desc: "Access to private and off-market opportunities" },
       ],
       image_src: "/images/due-diligence-report.png",
       image_alt: "Comprehensive due diligence report showing SEO, P&L, MRR, and tech stack analysis",
@@ -57,15 +57,15 @@ const SEED_BLOCKS = [
   {
     page_slug: "home", block_key: "seller_side", block_type: "list", sort_order: 4,
     content: {
-      title: "SELLER-SIDE",
+      title: "Founder title: "SELLER-SIDE" Business architect",
       intro: "",
       items: [
-        { title: "Listing optimization", desc: "Helping serious buyers see the real opportunity faster" },
-        { title: "Listing readiness audit", desc: "Fixing documentation gaps that scare off buyers" },
-        { title: "Pre-sale fixes", desc: "Quick wins to improve multiples before listing" },
-        { title: "Pre-exit scaling", desc: "Mentorship to grow, structure, and scale your digital asset for an eventual exit" },
-        { title: "Strategic buyers", desc: "Access to strategic buyers paying higher multiples" },
-        { title: "Network access (with conditions)*", desc: "Anonymous introductions to qualified buyers in our network who are actively searching" },
+        { title: "Founder title: "Listing optimization" Business architect", desc: "Helping serious buyers see the real opportunity faster" },
+        { title: "Founder title: "Listing readiness audit" Business architect", desc: "Fixing documentation gaps that scare off buyers" },
+        { title: "Founder title: "Pre-sale fixes" Business architect", desc: "Quick wins to improve multiples before listing" },
+        { title: "Founder title: "Pre-exit scaling" Business architect", desc: "Mentorship to grow, structure, and scale your digital asset for an eventual exit" },
+        { title: "Founder title: "Strategic buyers" Business architect", desc: "Access to strategic buyers paying higher multiples" },
+        { title: "Founder title: "Network access (with conditions)*" Business architect", desc: "Anonymous introductions to qualified buyers in our network who are actively searching" },
       ],
       image_src: "/images/seller-services.png",
       image_alt: "Comprehensive seller services: documentation audit, pre-exit scaling, listing readiness, strategic buyer access",
@@ -138,20 +138,20 @@ const SEED_BLOCKS = [
     content: {
       heading: "Our Mission: Empowering Confident Acquisitions in the Digital Age",
       paragraphs: [
-        "The acquisition ecosystem is often designed for large transactions, where M&A firms, lawyers, and complex financial institutions are necessary. This infrastructure makes sense when millions are at stake. However, for online businesses under $100K, that same elaborate framework becomes friction, not protection.",
-        "Most sub-$100K deals don't fail due to complex legal structures; they fail because buyers misjudge risk, overpay, or fundamentally misunderstand the asset they are acquiring. What these deals truly need isn't more paperwork, but rather clear, practical risk assessment and a smooth transition plan.",
-        "At Acquire To Scale, our mission is to democratize institutional-grade due diligence for online business acquisitions under $100K. We believe that every aspiring entrepreneur and seasoned investor deserves the clarity, confidence, and strategic roadmap needed to make informed buying decisions and build a truly scalable portfolio.",
+        "The acquisition ecosystem is often designed for large transactions, where M&A firms, lawyers, and complex financial institutions are necessary. This infrastructure makes sense when millions are at stake. However, for smaller online business deals, that same elaborate framework becomes friction, not protection.",
+        "Most small deals don't fail due to complex legal structures; they fail because buyers misjudge risk, overpay, or fundamentally misunderstand the asset they are acquiring. What these deals truly need isn't more paperwork, but rather clear, practical risk assessment and a smooth transition plan.",
+        "At Acquire To Scale, our mission is to democratize institutional-grade due diligence for small online business acquisitions. We believe that every aspiring entrepreneur and seasoned investor deserves the clarity, confidence, and strategic roadmap needed to make informed buying decisions and build a truly scalable portfolio.",
       ],
     }
   },
   {
     page_slug: "about", block_key: "comparison_table", block_type: "table", sort_order: 2,
     content: {
-      heading: "Why Traditional M&A Fails Sub-$100K Deals",
+      heading: "Why Traditional M&A Fails Small Deals",
       intro: "Traditional advisory services are ill-equipped for the unique dynamics of smaller online business acquisitions. Here's how Acquire To Scale offers a tailored, effective alternative:",
-      headers: ["Component", "Traditional M&A Firm", "DIY / Unassisted", "Acquire To Scale (<$100k)"],
+      headers: ["Component", "Traditional M&A Firm", "DIY / Unassisted", "Acquire To Scale (Small Deals)"],
       rows: [
-        ["Minimum Deal Size", "$100K+", "N/A", "Under $100K"],
+        ["Minimum Deal Size", "High six figures+", "N/A", "Small deals"],
         ["Advisory Fees", "$10K – $125K+", "$0", "Flat, Performance-Based"],
         ["Due Diligence", "Institutional / Slow", "Surface-level / Guessed", "Practical / Operational"],
         ["Timeline", "1 – 3 Months", "Instant (High Risk)", "2 – 7 Days"],
@@ -176,10 +176,10 @@ const SEED_BLOCKS = [
     content: {
       heading: "Why Choose Acquire To Scale?",
       cards: [
-        { title: "Operator-Led Expertise", desc: "Benefit from real-world experience in building, growing, and exiting digital businesses." },
-        { title: "Unbiased Due Diligence", desc: "We work exclusively for buyers, ensuring our analysis is focused solely on your best interests." },
-        { title: "Focus on Scalability", desc: "Our insights go beyond initial profitability, guiding you toward assets with long-term growth potential." },
-        { title: "Personalized Support", desc: "From initial review to post-acquisition strategy, we are your trusted partner in the acquisition journey." },
+        { title: "Founder title: "Operator-Led Expertise" Business architect", desc: "Benefit from real-world experience in building, growing, and exiting digital businesses." },
+        { title: "Founder title: "Unbiased Due Diligence" Business architect", desc: "We work exclusively for buyers, ensuring our analysis is focused solely on your best interests." },
+        { title: "Founder title: "Focus on Scalability" Business architect", desc: "Our insights go beyond initial profitability, guiding you toward assets with long-term growth potential." },
+        { title: "Founder title: "Personalized Support" Business architect", desc: "From initial review to post-acquisition strategy, we are your trusted partner in the acquisition journey." },
       ],
     }
   },
@@ -190,6 +190,24 @@ const SEED_BLOCKS = [
       heading: "First time buying an online business? Start here.",
       body: "Buying or selling a digital asset can feel overwhelming. In a 1-on-1 Clarity Call, we'll evaluate your goals, review your investor profile, and outline the right acquisition strategy for you.",
       button: { label: "Book Your Clarity Call", href: "/clarity-call" },
+    }
+  },
+  {
+    page_slug: "about", block_key: "founder", block_type: "founder", sort_order: 6,
+    content: {
+      name: "Adil Maf",
+      title: "Founder & Business architect",
+      bio: "Adil is a **serial entrepreneur and investor**, and a board member of multiple seven-figure businesses. He brings real-world experience building, growing, and exiting digital companies.\n\nHe has mentored over 2,000 entrepreneurs across 60+ countries ([testimonials](https://adilmaf.com/testimonials)), and built across platforms a global audience of 40,000+ subscribers, where he shares tactical frameworks for online business growth.\n\nHis approach to due diligence is **operator-led** — the same framework he uses when evaluating deals for himself and his consulting clients.\n\nThrough Acquire To Scale, his mission is to provide the institutional-grade due diligence he wished he had when he began his own acquisition journey in 2011.",
+      image_src: "",
+      image_alt: "Adil Maf, Founder of Acquire To Scale",
+      social: {
+        instagram: "https://instagram.com/adil.maf",
+        youtube: "https://www.youtube.com/adilmaf",
+        substack: "https://acquiretoscale.substack.com",
+        linkedin: "",
+        twitter: "",
+        website: "",
+      },
     }
   },
 

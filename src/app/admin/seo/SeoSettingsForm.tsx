@@ -15,6 +15,7 @@ type Settings = {
   googleAdsConversionLabel: string | null;
   metaTitleOverride: string | null;
   metaDescriptionOverride: string | null;
+  customHeadScripts: string | null;
 };
 
 const DEFAULT: Settings = {
@@ -30,6 +31,7 @@ const DEFAULT: Settings = {
   googleAdsConversionLabel: null,
   metaTitleOverride: null,
   metaDescriptionOverride: null,
+  customHeadScripts: null,
 };
 
 export function SeoSettingsForm({ demoMode }: { demoMode: boolean }) {
@@ -55,6 +57,7 @@ export function SeoSettingsForm({ demoMode }: { demoMode: boolean }) {
           googleAdsConversionLabel: data.googleAdsConversionLabel ?? null,
           metaTitleOverride: data.metaTitleOverride ?? null,
           metaDescriptionOverride: data.metaDescriptionOverride ?? null,
+          customHeadScripts: data.customHeadScripts ?? null,
         });
       })
       .catch(() => setSettings(DEFAULT))
@@ -93,6 +96,39 @@ export function SeoSettingsForm({ demoMode }: { demoMode: boolean }) {
           <code className="rounded bg-amber-100 px-1">site_settings</code> migration to save from this dashboard.
         </div>
       )}
+
+      {/* 0. Google Tag / Custom head scripts */}
+      <section className="rounded-xl border-2 border-[var(--accent)]/30 bg-[var(--card)] p-6">
+        <div className="flex items-start gap-3">
+          <svg viewBox="0 0 24 24" fill="currentColor" className="mt-0.5 h-5 w-5 shrink-0 text-[var(--accent)]">
+            <path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm0 18c-4.418 0-8-3.582-8-8s3.582-8 8-8 8 3.582 8 8-3.582 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/>
+          </svg>
+          <div>
+            <h2 className="text-lg font-semibold text-[var(--foreground)]">
+              Google Tag / Custom tracking code
+            </h2>
+            <p className="mt-1 text-sm text-[var(--muted)]">
+              Paste your full Google tag snippet (or any other head script) below. It will be injected on every page, immediately inside the{" "}
+              <code className="rounded bg-[var(--card-hover)] px-1">&lt;head&gt;</code>.{" "}
+              This is the recommended way to add Google Analytics, Google Ads, or any tag from Google.
+            </p>
+          </div>
+        </div>
+        <textarea
+          value={settings.customHeadScripts ?? ""}
+          onChange={(e) =>
+            setSettings((s) => ({ ...s, customHeadScripts: e.target.value || null }))
+          }
+          rows={8}
+          spellCheck={false}
+          placeholder={`<!-- Google tag (gtag.js) -->\n<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>\n<script>\n  window.dataLayer = window.dataLayer || [];\n  function gtag(){dataLayer.push(arguments);}\n  gtag('js', new Date());\n  gtag('config', 'G-XXXXXXXXXX');\n</script>`}
+          className="mt-4 w-full rounded-lg border border-[var(--border)] bg-white px-3 py-2 font-mono text-xs text-[var(--foreground)] focus:border-[var(--accent)] focus:outline-none focus:ring-1 focus:ring-[var(--accent)]"
+        />
+        <p className="mt-2 text-xs text-[var(--muted)]">
+          Tip: paste the entire snippet Google gives you — comments, both{" "}
+          <code className="rounded bg-[var(--card-hover)] px-1">&lt;script&gt;</code> tags and all. No need to edit it.
+        </p>
+      </section>
 
       {/* 1. AI-Friendly Content Optimization */}
       <section className="rounded-xl border border-[var(--border)] bg-[var(--card)] p-6">

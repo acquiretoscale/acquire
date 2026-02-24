@@ -100,6 +100,7 @@ export type FounderBlock = {
   image_src: string;
   image_alt: string;
   social: SocialLinks;
+  social_stats?: Partial<Record<keyof SocialLinks, string>>;
 };
 
 export type PageBlock =
@@ -219,6 +220,32 @@ const PAGE_DEFAULTS: Record<string, PageContentMap> = {
       cta_primary: { label: "Due Diligence", href: "/due-diligence" },
       cta_secondary: { label: "Get a Deal Reviewed", href: "/buyer-form" },
     } satisfies WhyUsBlock,
+
+    founder: {
+      name: "Adil Maf",
+      title: "Founder & Business architect",
+      bio: `Adil is a **serial entrepreneur and investor**, and a board member of multiple seven-figure businesses. He brings real-world experience building, growing, and exiting digital companies.
+
+He has mentored over 2,000 entrepreneurs across 60+ countries ([testimonials](https://adilmaf.com/testimonials)), and built across platforms a global audience of 40,000+ subscribers, where he shares tactical frameworks for online business growth.
+
+His approach to due diligence is **operator-led** — the same framework he uses when evaluating deals for himself and his consulting clients.
+
+Through Acquire To Scale, his mission is to provide the institutional-grade due diligence he wished he had when he began his own acquisition journey in 2011.`,
+      image_src: "/images/adilmaf.png",
+      image_alt: "Adil Maf, Founder of Acquire To Scale",
+      social: {
+        instagram: "https://instagram.com/adil.maf",
+        youtube: "https://www.youtube.com/adilmaf",
+        substack: "https://acquiretoscale.substack.com",
+        linkedin: "",
+        twitter: "",
+        website: "",
+      },
+      social_stats: {
+        instagram: "21K followers",
+        youtube: "15K subscribers",
+      },
+    } satisfies FounderBlock,
   },
 
   about: {
@@ -232,18 +259,18 @@ const PAGE_DEFAULTS: Record<string, PageContentMap> = {
     mission: {
       heading: "Our Mission: Empowering Confident Acquisitions in the Digital Age",
       paragraphs: [
-        "The acquisition ecosystem is often designed for large transactions, where M&A firms, lawyers, and complex financial institutions are necessary. This infrastructure makes sense when millions are at stake. However, for online businesses under $100K, that same elaborate framework becomes friction, not protection.",
-        "Most sub-$100K deals don't fail due to complex legal structures; they fail because buyers misjudge risk, overpay, or fundamentally misunderstand the asset they are acquiring. What these deals truly need isn't more paperwork, but rather clear, practical risk assessment and a smooth transition plan.",
-        "At Acquire To Scale, our mission is to democratize institutional-grade due diligence for online business acquisitions under $100K. We believe that every aspiring entrepreneur and seasoned investor deserves the clarity, confidence, and strategic roadmap needed to make informed buying decisions and build a truly scalable portfolio.",
+        "The acquisition ecosystem is often designed for large transactions, where M&A firms, lawyers, and complex financial institutions are necessary. This infrastructure makes sense when millions are at stake. However, for smaller online business deals, that same elaborate framework becomes friction, not protection.",
+        "Most small deals don't fail due to complex legal structures; they fail because buyers misjudge risk, overpay, or fundamentally misunderstand the asset they are acquiring. What these deals truly need isn't more paperwork, but rather clear, practical risk assessment and a smooth transition plan.",
+        "At Acquire To Scale, our mission is to democratize institutional-grade due diligence for small online business acquisitions. We believe that every aspiring entrepreneur and seasoned investor deserves the clarity, confidence, and strategic roadmap needed to make informed buying decisions and build a truly scalable portfolio.",
       ],
     } satisfies RichTextBlock,
 
     comparison_table: {
-      heading: "Why Traditional M&A Fails Sub-$100K Deals",
+      heading: "Why Traditional M&A Fails Small Deals",
       intro: "Traditional advisory services are ill-equipped for the unique dynamics of smaller online business acquisitions. Here's how Acquire To Scale offers a tailored, effective alternative:",
-      headers: ["Component", "Traditional M&A Firm", "DIY / Unassisted", "Acquire To Scale (<$100k)"],
+      headers: ["Component", "Traditional M&A Firm", "DIY / Unassisted", "Acquire To Scale (Small Deals)"],
       rows: [
-        ["Minimum Deal Size", "$100K+", "N/A", "Under $100K"],
+        ["Minimum Deal Size", "High six figures+", "N/A", "Small deals"],
         ["Advisory Fees", "$10K – $125K+", "$0", "Flat, Performance-Based"],
         ["Due Diligence", "Institutional / Slow", "Surface-level / Guessed", "Practical / Operational"],
         ["Timeline", "1 – 3 Months", "Instant (High Risk)", "2 – 7 Days"],
@@ -278,14 +305,97 @@ const PAGE_DEFAULTS: Record<string, PageContentMap> = {
       button: { label: "Book Your Clarity Call", href: "/clarity-call" },
     } satisfies CtaBlock,
 
+    company_intro: {
+      heading: "About the company",
+      paragraphs: [
+        "**Acquire To Scale** is the missing layer between online marketplaces and traditional M&A firms. We help buyers and sellers of digital assets make informed decisions through rigorous due diligence, strategic clarity, and practical growth guidance.",
+        "From SaaS and content sites to newsletters and digital products, our focus is simple: **reduce risk, unlock value, and turn acquisitions into scalable outcomes.**",
+      ],
+    } satisfies RichTextBlock,
+
     founder: {
-      name: "",
-      title: "",
-      bio: "",
-      image_src: "",
-      image_alt: "",
-      social: { instagram: "", youtube: "", substack: "", linkedin: "", twitter: "", website: "" },
+      name: "Adil Maf",
+      title: "Founder & Business architect",
+      bio: `Adil is a **serial entrepreneur and investor**, and a board member of multiple seven-figure businesses. He brings real-world experience building, growing, and exiting digital companies.
+
+He has mentored over 2,000 entrepreneurs across 60+ countries ([testimonials](https://adilmaf.com/testimonials)), and built across platforms a global audience of 40,000+ subscribers, where he shares tactical frameworks for online business growth.
+
+His approach to due diligence is **operator-led** — the same framework he uses when evaluating deals for himself and his consulting clients.
+
+Through Acquire To Scale, his mission is to provide the institutional-grade due diligence he wished he had when he began his own acquisition journey in 2011.`,
+      image_src: "/images/adilmaf.png",
+      image_alt: "Adil Maf, Founder of Acquire To Scale",
+      social: {
+        instagram: "https://instagram.com/adil.maf",
+        youtube: "https://www.youtube.com/adilmaf",
+        substack: "https://acquiretoscale.substack.com",
+        linkedin: "",
+        twitter: "",
+        website: "",
+      },
+      social_stats: {
+        instagram: "21K followers",
+        youtube: "15K subscribers",
+      },
     } satisfies FounderBlock,
+  },
+
+  "our-mission": {
+    hero: {
+      label: "Our Mission",
+      heading: "Our Mission",
+      subheading: "",
+      cta_primary: { label: "", href: "" },
+    } satisfies HeroBlock,
+
+    mission: {
+      heading: "Empowering Confident Acquisitions in the Digital Age",
+      paragraphs: [
+        "The acquisition ecosystem is often designed for large transactions, where M&A firms, lawyers, and complex financial institutions are necessary. This infrastructure makes sense when millions are at stake. However, for smaller online business deals, that same elaborate framework becomes friction, not protection.",
+        "Most small deals don't fail due to complex legal structures; they fail because buyers misjudge risk, overpay, or fundamentally misunderstand the asset they are acquiring. What these deals truly need isn't more paperwork, but rather clear, practical risk assessment and a smooth transition plan.",
+        "At Acquire To Scale, our mission is to democratize institutional-grade due diligence for small online business acquisitions. We believe that every aspiring entrepreneur and seasoned investor deserves the clarity, confidence, and strategic roadmap needed to make informed buying decisions and build a truly scalable portfolio.",
+      ],
+    } satisfies RichTextBlock,
+
+    comparison_table: {
+      heading: "Why Traditional M&A Fails Small Deals",
+      intro: "Traditional advisory services are ill-equipped for the unique dynamics of smaller online business acquisitions. Here's how Acquire To Scale offers a tailored, effective alternative:",
+      headers: ["Component", "Traditional M&A Firm", "DIY / Unassisted", "Acquire To Scale (Small Deals)"],
+      rows: [
+        ["Minimum Deal Size", "High six figures+", "N/A", "Small deals"],
+        ["Advisory Fees", "$10K – $125K+", "$0", "Flat, Performance-Based"],
+        ["Due Diligence", "Institutional / Slow", "Surface-level / Guessed", "Practical / Operational"],
+        ["Timeline", "1 – 3 Months", "Instant (High Risk)", "2 – 7 Days"],
+        ["Main Risk Source", "Financing & Structure", "Scams & Bad Assets", "Mitigated Risk & Growth"],
+        ["Post-Purchase", "Hands-off", '"Figure it out"', "30-Day Transition Plan"],
+      ],
+      footer_note: "Costs vary, figures shown are indicative. At smaller deal sizes, risk isn't legal — it's operational. If you're buying a $50K online business, spending $40K on advisors doesn't reduce risk — it just shifts it.",
+    } satisfies TableBlock,
+
+    philosophy: {
+      heading: "Our Philosophy: Operators for Operators",
+      paragraphs: [
+        "We are not just advisors; we are operators. Our team understands the nuances of running and scaling online businesses because we've been in your shoes. This deep, practical experience informs every aspect of our service, from spotting subtle red flags that others miss to identifying overlooked opportunities for post-acquisition growth.",
+        "We believe that a successful acquisition isn't just about buying a good deal—it's about acquiring an asset that scales. Our commitment is to provide you with the strategic foresight and actionable intelligence to transform your acquisition into a thriving, automated, and scalable venture.",
+      ],
+    } satisfies RichTextBlock,
+
+    why_choose: {
+      heading: "Why Choose Acquire To Scale?",
+      cards: [
+        { title: "Operator-Led Expertise", desc: "Benefit from real-world experience in building, growing, and exiting digital businesses." },
+        { title: "Unbiased Due Diligence", desc: "We work exclusively for buyers, ensuring our analysis is focused solely on your best interests." },
+        { title: "Focus on Scalability", desc: "Our insights go beyond initial profitability, guiding you toward assets with long-term growth potential." },
+        { title: "Personalized Support", desc: "From initial review to post-acquisition strategy, we are your trusted partner in the acquisition journey." },
+      ],
+    } satisfies CardsBlock,
+
+    clarity_cta: {
+      label: "Clarity Call",
+      heading: "First time buying an online business? Start here.",
+      body: "Buying or selling a digital asset can feel overwhelming. In a 1-on-1 Clarity Call, we'll evaluate your goals, review your investor profile, and outline the right acquisition strategy for you.",
+      button: { label: "Book Your Clarity Call", href: "/clarity-call" },
+    } satisfies CtaBlock,
   },
 
   "for-buyers": {
@@ -375,12 +485,19 @@ export async function getPageContent(pageSlug: string): Promise<PageContentMap> 
       fromDb[row.block_key] = row.content as PageBlock;
     }
 
-    // Deep merge: DB values override defaults, but defaults fill missing keys
+    // Deep merge: DB values override defaults, but defaults fill missing keys.
+    // Founder block: if DB has no real content (empty name/bio/image), keep defaults so section still shows.
     const merged: PageContentMap = { ...defaults };
     for (const [key, value] of Object.entries(fromDb)) {
+      const def = defaults[key] as Record<string, unknown> | undefined;
+      const dbVal = value as Record<string, unknown>;
+      if (key === "founder" && def && typeof dbVal?.name === "string" && typeof dbVal?.bio === "string" && !dbVal.name?.trim() && !dbVal.bio?.trim() && !(dbVal.image_src as string)?.trim()) {
+        merged[key] = def as PageBlock;
+        continue;
+      }
       merged[key] = {
-        ...(defaults[key] as Record<string, unknown>),
-        ...(value as Record<string, unknown>),
+        ...def,
+        ...dbVal,
       } as PageBlock;
     }
     return merged;
@@ -437,6 +554,7 @@ export function getPageDefaults(pageSlug: string): PageContentMap {
 export const EDITABLE_PAGES = [
   { slug: "home", label: "Home", path: "/" },
   { slug: "about", label: "About", path: "/about" },
+  { slug: "our-mission", label: "Our Mission", path: "/our-mission" },
   { slug: "for-buyers", label: "For Buyers", path: "/due-diligence" },
   { slug: "for-sellers", label: "For Sellers", path: "/sell-your-business" },
   { slug: "for-scalers", label: "For Scalers", path: "/scaling" },

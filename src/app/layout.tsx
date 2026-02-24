@@ -10,6 +10,7 @@ import { SeoInject } from "@/components/SeoInject";
 import { AdminEditToolbar } from "@/components/AdminEditToolbar";
 import { site } from "@/lib/site";
 import { getSeoSettings } from "@/lib/seo-settings";
+import { parseHeadScripts } from "@/lib/parse-head-scripts";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -77,11 +78,20 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const seo = await getSeoSettings();
+  const customScripts = seo.customHeadScripts ? parseHeadScripts(seo.customHeadScripts) : [];
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        {/* Custom head scripts (Google tag, etc.) pasted via SEO admin */}
+        {customScripts.map((s) =>
+          s.type === "external" ? (
+            <Script key={s.id} src={s.src} strategy="afterInteractive" />
+          ) : (
+            <Script key={s.id} id={s.id} strategy="afterInteractive" dangerouslySetInnerHTML={{ __html: s.code }} />
+          )
+        )}
         {seo.gtmContainerId && (
           <noscript>
             <iframe

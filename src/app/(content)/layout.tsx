@@ -4,7 +4,7 @@ export default function ContentLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div data-theme="content" className="theme-content min-h-screen bg-[var(--background)] text-[var(--foreground)]">
+    <div data-theme="content" className="theme-content min-h-screen overflow-x-hidden bg-[var(--background)] text-[var(--foreground)]">
       {children}
     </div>
   );

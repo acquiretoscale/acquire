@@ -552,15 +552,24 @@ function FounderEditor({ data, onChange }: { data: FounderBlock; onChange: (v: F
           Social Links — leave blank to hide
         </p>
         {SOCIAL_FIELDS.map((field) => (
-          <div key={field.key} className="flex items-center gap-3">
-            <span className="w-24 shrink-0 text-xs font-medium text-[var(--muted)]">{field.label}</span>
-            <input
-              type="url"
-              value={data.social?.[field.key] ?? ""}
-              onChange={(e) => onChange({ ...data, social: { ...data.social, [field.key]: e.target.value } })}
-              placeholder={field.placeholder}
-              className="flex-1 rounded-lg border border-[var(--border)] bg-[var(--background)] px-3 py-2 text-sm text-[var(--foreground)] focus:border-[var(--accent)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/20"
-            />
+          <div key={field.key} className="flex items-start gap-3">
+            <span className="mt-2.5 w-24 shrink-0 text-xs font-medium text-[var(--muted)]">{field.label}</span>
+            <div className="flex flex-1 flex-col gap-1.5">
+              <input
+                type="url"
+                value={data.social?.[field.key] ?? ""}
+                onChange={(e) => onChange({ ...data, social: { ...data.social, [field.key]: e.target.value } })}
+                placeholder={field.placeholder}
+                className="rounded-lg border border-[var(--border)] bg-[var(--background)] px-3 py-2 text-sm text-[var(--foreground)] focus:border-[var(--accent)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/20"
+              />
+              <input
+                type="text"
+                value={data.social_stats?.[field.key] ?? ""}
+                onChange={(e) => onChange({ ...data, social_stats: { ...data.social_stats, [field.key]: e.target.value } })}
+                placeholder={`Stat label (e.g. "21K subscribers") — leave blank to hide`}
+                className="rounded-lg border border-[var(--border)] bg-[var(--background)] px-3 py-1.5 text-xs text-[var(--foreground)] focus:border-[var(--accent)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/20"
+              />
+            </div>
           </div>
         ))}
       </div>

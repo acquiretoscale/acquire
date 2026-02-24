@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import Script from "next/script";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import remarkGfm from "remark-gfm";
@@ -9,6 +10,8 @@ import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import { site } from "@/lib/site";
 import { getPostBySlug, getAllSlugs, getArticleSchema } from "@/lib/blog";
 import { getSupabasePostBySlug, getAllSupabasePosts } from "@/lib/supabase-blog";
+import { sanitizeBlogHtml } from "@/lib/sanitize-blog-html";
+import { ReadingProgressBar } from "@/components/ReadingProgressBar";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -45,6 +48,7 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
+
   const supabasePost = await getSupabasePostBySlug(slug);
   if (supabasePost) {
     return {
@@ -56,8 +60,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         description: supabasePost.meta_description || undefined,
         type: "article",
         url: `${site.url}/blog/${supabasePost.slug}`,
-        publishedTime: supabasePost.created_at,
-        modifiedTime: supabasePost.updated_at,
+      publishedTime: supabasePost.published_at || supabasePost.created_at,
+      modifiedTime: supabasePost.updated_at,
       },
       twitter: {
         card: "summary_large_image",
@@ -66,6 +70,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       },
     };
   }
+
   const post = getPostBySlug(slug);
   if (!post) return {};
   return {
@@ -93,14 +98,15 @@ export default async function BlogPostPage({ params }: Props) {
 
   const supabasePost = await getSupabasePostBySlug(slug);
   if (supabasePost) {
-    const html = supabaseContentToHtml(supabasePost.content);
+    const rawHtml = supabaseContentToHtml(supabasePost.content);
+    const html = rawHtml.startsWith("<") ? sanitizeBlogHtml(rawHtml) : rawHtml;
     const readingTimeMinutes = readingTimeFromHtml(html);
     const articleSchema = {
       "@context": "https://schema.org",
       "@type": "Article",
       headline: supabasePost.title,
       description: supabasePost.meta_description || supabasePost.title,
-      datePublished: supabasePost.created_at,
+      datePublished: supabasePost.published_at || supabasePost.created_at,
       dateModified: supabasePost.updated_at,
       author: { "@type": "Organization", name: site.name, url: site.url },
       publisher: { "@type": "Organization", name: site.name, url: site.url },
@@ -108,16 +114,21 @@ export default async function BlogPostPage({ params }: Props) {
       url: `${site.url}/blog/${supabasePost.slug}`,
     };
 
+    const authorName = supabasePost.author_name;
+    const authorBio = supabasePost.author_bio;
+    const authorImage = supabasePost.author_image || "/images/adilmaf.png";
+
     return (
-      <div className="bg-[var(--background)] text-[var(--foreground)]">
+      <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)]">
+        <ReadingProgressBar />
         <Script
           id="ld-article"
           type="application/ld+json"
           strategy="afterInteractive"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
         />
-        <article className="border-b border-[var(--border)] py-16">
-          <div className="mx-auto max-w-3xl px-4">
+        <article className="border-b border-[var(--border)] py-10 sm:py-14 md:py-20">
+          <div className="mx-auto max-w-3xl px-6 sm:px-8">
             <div className="mb-8">
               <Link
                 href="/blog"
@@ -126,10 +137,10 @@ export default async function BlogPostPage({ params }: Props) {
                 ← Back to blog
               </Link>
             </div>
-            <header className="space-y-6">
-              <div className="flex flex-wrap items-center gap-3 text-base text-[var(--muted)]">
-                <time dateTime={supabasePost.created_at}>
-                  {new Date(supabasePost.created_at).toLocaleDateString("en-US", {
+            <header className="space-y-5">
+              <div className="flex flex-wrap items-center gap-3 text-sm text-[var(--muted)]">
+                <time dateTime={supabasePost.published_at || supabasePost.created_at}>
+                  {new Date(supabasePost.published_at || supabasePost.created_at).toLocaleDateString("en-US", {
                     year: "numeric",
                     month: "long",
                     day: "numeric",
@@ -137,32 +148,53 @@ export default async function BlogPostPage({ params }: Props) {
                 </time>
                 <span aria-hidden>·</span>
                 <span>{readingTimeMinutes} min read</span>
-                <span aria-hidden>·</span>
-                <span>
-                  Updated{" "}
-                  {new Date(supabasePost.updated_at).toLocaleDateString("en-US", {
-                    year: "numeric",
-                    month: "short",
-                    day: "numeric",
-                  })}
-                </span>
               </div>
-              <h1 className="text-4xl font-bold tracking-tight md:text-5xl">
+              <h1 className="text-3xl font-bold tracking-tight leading-tight sm:text-4xl md:text-5xl">
                 {supabasePost.title}
               </h1>
               {supabasePost.meta_description && (
-                <p className="text-xl text-[var(--muted)]">{supabasePost.meta_description}</p>
+                <p className="text-lg leading-relaxed text-[var(--muted)]">
+                  {supabasePost.meta_description}
+                </p>
+              )}
+              {authorName && (
+                <div className="flex items-center gap-3 border-t border-[var(--border)] pt-5">
+                  <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-full ring-2 ring-[var(--border)]">
+                    <Image src={authorImage} alt={authorName} fill className="object-cover object-top" sizes="40px" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-[var(--foreground)]">{authorName}</p>
+                    {authorBio && <p className="text-xs text-[var(--muted)]">{authorBio}</p>}
+                  </div>
+                </div>
               )}
             </header>
-            <div
-              className="prose prose-lg mt-10 max-w-none prose-headings:font-semibold prose-p:text-[var(--muted)] prose-a:text-[var(--accent)] prose-a:no-underline hover:prose-a:underline prose-img:rounded-lg"
-              dangerouslySetInnerHTML={{ __html: html }}
-            />
+            <div className="blog-article-body mt-10">
+              <div className="prose" dangerouslySetInnerHTML={{ __html: html }} />
+            </div>
           </div>
         </article>
-        <section className="border-t border-[var(--border)] py-16">
-          <div className="mx-auto max-w-3xl px-4">
-            <div className="flex flex-col items-start justify-between gap-6 rounded-2xl bg-[var(--surface-dark)] px-8 py-10 text-white md:flex-row md:items-center">
+
+        {authorName && (
+          <section className="border-b border-[var(--border)] py-10 sm:py-12">
+            <div className="mx-auto max-w-3xl px-6 sm:px-8">
+              <div className="flex flex-col sm:flex-row items-start gap-4 sm:gap-5 rounded-2xl border border-[var(--border)] bg-[var(--card)] p-5 sm:p-6">
+                <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-full ring-2 ring-[var(--border)]">
+                  <Image src={authorImage} alt={authorName} fill className="object-cover object-top" sizes="64px" />
+                </div>
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-widest text-[var(--muted)]">Written by</p>
+                  <p className="mt-1 text-lg font-bold text-[var(--foreground)]">{authorName}</p>
+                  {authorBio && <p className="mt-1 text-sm leading-relaxed text-[var(--muted)]">{authorBio}</p>}
+                </div>
+              </div>
+            </div>
+          </section>
+        )}
+
+        <section className="py-12 sm:py-16">
+          <div className="mx-auto max-w-3xl px-6 sm:px-8">
+            <div className="flex flex-col items-stretch sm:items-start justify-between gap-6 rounded-2xl bg-[var(--surface-dark)] px-5 py-8 sm:px-8 sm:py-10 text-white md:flex-row md:items-center">
               <div>
                 <div className="text-xl font-bold">Ready to explore acquisitions?</div>
                 <p className="mt-2 text-[var(--on-dark-muted)]">
@@ -189,7 +221,7 @@ export default async function BlogPostPage({ params }: Props) {
   const isHtmlContent = post.content.trim().startsWith("<");
   const readingTimeMinutes = isHtmlContent ? readingTimeFromHtml(post.content) : post.readingTimeMinutes;
   const bodyContent = isHtmlContent ? (
-    <div dangerouslySetInnerHTML={{ __html: post.content }} />
+    <div dangerouslySetInnerHTML={{ __html: sanitizeBlogHtml(post.content) }} />
   ) : (
     await MDXRemote({
       source: post.content,
@@ -206,15 +238,16 @@ export default async function BlogPostPage({ params }: Props) {
   );
 
   return (
-    <div className="bg-[var(--background)] text-[var(--foreground)]">
+    <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)]">
+      <ReadingProgressBar />
       <Script
         id="ld-article"
         type="application/ld+json"
         strategy="afterInteractive"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
       />
-      <article className="border-b border-[var(--border)] py-16">
-        <div className="mx-auto max-w-3xl px-4">
+      <article className="border-b border-[var(--border)] py-10 sm:py-14 md:py-20">
+        <div className="mx-auto max-w-3xl px-6 sm:px-8">
           <div className="mb-8">
             <Link
               href="/blog"
@@ -223,7 +256,7 @@ export default async function BlogPostPage({ params }: Props) {
               ← Back to blog
             </Link>
           </div>
-          <header className="space-y-6">
+          <header className="space-y-5">
             <div className="flex flex-wrap items-center gap-3 text-sm text-[var(--muted)]">
               <time dateTime={post.date}>
                 {new Date(post.date).toLocaleDateString("en-US", {
@@ -248,21 +281,23 @@ export default async function BlogPostPage({ params }: Props) {
                 </>
               )}
             </div>
-            <h1 className="text-4xl font-bold tracking-tight md:text-5xl">
+            <h1 className="text-3xl font-bold tracking-tight leading-tight sm:text-4xl md:text-5xl">
               {post.title}
             </h1>
             {post.description && (
-              <p className="text-xl text-[var(--muted)]">{post.description}</p>
+              <p className="text-lg leading-relaxed text-[var(--muted)]">{post.description}</p>
             )}
           </header>
-          <div className="prose prose-lg mt-10 max-w-none prose-headings:font-semibold prose-p:text-[var(--muted)] prose-a:text-[var(--accent)] prose-a:no-underline hover:prose-a:underline prose-img:rounded-lg">
-            {bodyContent}
+          <div className="blog-article-body mt-10">
+            <div className="prose">
+              {bodyContent}
+            </div>
           </div>
         </div>
       </article>
-      <section className="border-t border-[var(--border)] py-16">
-        <div className="mx-auto max-w-3xl px-4">
-          <div className="flex flex-col items-start justify-between gap-6 rounded-2xl bg-[var(--foreground)] px-8 py-10 text-[var(--on-dark)] md:flex-row md:items-center">
+      <section className="py-12 sm:py-16">
+        <div className="mx-auto max-w-3xl px-6 sm:px-8">
+          <div className="flex flex-col items-stretch sm:items-start justify-between gap-6 rounded-2xl bg-[var(--foreground)] px-5 py-8 sm:px-8 sm:py-10 text-[var(--on-dark)] md:flex-row md:items-center">
             <div>
               <div className="text-xl font-bold">Ready to explore acquisitions?</div>
               <p className="mt-2 text-[var(--on-dark-muted)]">

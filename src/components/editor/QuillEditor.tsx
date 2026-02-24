@@ -3,12 +3,9 @@
 import React, { useCallback, useMemo, useRef, useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import "react-quill-new/dist/quill.snow.css";
+import { sanitizeBlogHtmlForSave as sanitizeBlogHtml } from "@/lib/sanitize-blog-html";
 
 const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false });
-
-/* ------------------------------------------------------------------ */
-/*  Helpers                                                            */
-/* ------------------------------------------------------------------ */
 
 function youtubeUrlToEmbed(url: string): string | null {
   const trimmed = url.trim();
@@ -308,6 +305,44 @@ export function QuillEditor({
     },
     [value, onChange]
   );
+
+  /* ---- Sanitize paste: strip width/min-width/max-width so pasted content can't break layout ---- */
+  useEffect(() => {
+    let cleanup: (() => void) | null = null;
+
+    const attach = () => {
+      const editor = quillRef.current?.getEditor?.();
+      const root = editor?.root as HTMLElement | undefined;
+      if (!root) return;
+
+      const handler = (e: ClipboardEvent) => {
+        const html = e.clipboardData?.getData("text/html");
+        if (html) {
+          e.preventDefault();
+          e.stopPropagation();
+          const sanitized = sanitizeBlogHtml(html);
+          const q = quillRef.current?.getEditor?.();
+          if (q) {
+            const range = q.getSelection?.(true);
+            const index = range ? range.index : (q.getLength?.() ?? 0);
+            q.clipboard?.dangerouslyPasteHTML?.(index, sanitized, "user");
+          }
+        }
+      };
+      root.addEventListener("paste", handler as EventListener, true);
+      cleanup = () => root.removeEventListener("paste", handler as EventListener, true);
+    };
+
+    attach();
+    if (!cleanup) {
+      const t = setTimeout(attach, 400);
+      return () => {
+        clearTimeout(t);
+        cleanup?.();
+      };
+    }
+    return () => cleanup?.();
+  }, []);
 
   /* ---- remove video: click × overlay ---- */
   useEffect(() => {
