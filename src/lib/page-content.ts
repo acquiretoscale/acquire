@@ -84,6 +84,24 @@ export type TableBlock = {
   footer_note?: string;
 };
 
+export type SocialLinks = {
+  instagram?: string;
+  youtube?: string;
+  substack?: string;
+  linkedin?: string;
+  twitter?: string;
+  website?: string;
+};
+
+export type FounderBlock = {
+  name: string;
+  title: string;
+  bio: string;
+  image_src: string;
+  image_alt: string;
+  social: SocialLinks;
+};
+
 export type PageBlock =
   | HeroBlock
   | QuoteBlock
@@ -94,7 +112,8 @@ export type PageBlock =
   | AssetFocusBlock
   | WhyUsBlock
   | CardsBlock
-  | TableBlock;
+  | TableBlock
+  | FounderBlock;
 
 export type PageContentMap = Record<string, PageBlock>;
 
@@ -258,6 +277,15 @@ const PAGE_DEFAULTS: Record<string, PageContentMap> = {
       body: "Buying or selling a digital asset can feel overwhelming. In a 1-on-1 Clarity Call, we'll evaluate your goals, review your investor profile, and outline the right acquisition strategy for you.",
       button: { label: "Book Your Clarity Call", href: "/clarity-call" },
     } satisfies CtaBlock,
+
+    founder: {
+      name: "",
+      title: "",
+      bio: "",
+      image_src: "",
+      image_alt: "",
+      social: { instagram: "", youtube: "", substack: "", linkedin: "", twitter: "", website: "" },
+    } satisfies FounderBlock,
   },
 
   "for-buyers": {

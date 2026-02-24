@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { ShimmerLink } from "@/components/ShimmerLink";
 import { getPageContent } from "@/lib/page-content";
-import type { HeroBlock, RichTextBlock, TableBlock, CardsBlock, CtaBlock } from "@/lib/page-content";
+import type { HeroBlock, RichTextBlock, TableBlock, CardsBlock, CtaBlock, FounderBlock } from "@/lib/page-content";
+import { FounderSection } from "@/components/FounderSection";
 
 export const metadata: Metadata = {
   title: "About",
@@ -20,6 +21,7 @@ export default async function AboutPage() {
   const philosophy = content.philosophy as RichTextBlock;
   const whyChoose = content.why_choose as CardsBlock;
   const clarityCta = content.clarity_cta as CtaBlock;
+  const founder = content.founder as FounderBlock;
 
   return (
     <div className="bg-[var(--background)] text-[var(--foreground)]">
@@ -131,6 +133,9 @@ export default async function AboutPage() {
           </ul>
         </div>
       </section>
+
+      {/* About the Founder */}
+      <FounderSection founder={founder} />
 
       {/* Clarity Call CTA */}
       <section data-cms-block="about/clarity_cta" className="border-t border-[var(--border)] py-12 md:py-16">

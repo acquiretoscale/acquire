@@ -90,6 +90,7 @@ export default async function AdminPageEditorPage({
 }
 
 function inferBlockType(blockKey: string, content: PageBlock): string {
+  if ("social" in content) return "founder";
   if ("text" in content) return "quote";
   if ("cta_primary" in content) return "hero";
   if ("button" in content) return "cta";

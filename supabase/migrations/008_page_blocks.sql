@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS page_blocks (
   id          uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   page_slug   text NOT NULL,
   block_key   text NOT NULL,
-  block_type  text NOT NULL CHECK (block_type IN ('hero','rich_text','list','cta','cards','table','quote','partner_logos','featured_articles')),
+  block_type  text NOT NULL CHECK (block_type IN ('hero','rich_text','list','cta','cards','table','quote','partner_logos','featured_articles','founder')),
   content     jsonb NOT NULL DEFAULT '{}',
   sort_order  int DEFAULT 0,
   is_visible  boolean DEFAULT true,

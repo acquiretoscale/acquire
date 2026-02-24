@@ -15,6 +15,7 @@ import type {
   WhyUsBlock,
   CardsBlock,
   TableBlock,
+  FounderBlock,
   CtaButton,
   ListItem,
 } from "@/lib/page-content";
@@ -40,6 +41,7 @@ const BLOCK_LABELS: Record<string, string> = {
   deal_sourcing: "Deal Sourcing & Private Vault",
   cta: "Call to Action",
   content: "Content Section",
+  founder: "About the Founder",
 };
 
 // ---------------------------------------------------------------------------
@@ -499,6 +501,73 @@ function TableEditor({ data, onChange }: { data: TableBlock; onChange: (v: Table
   );
 }
 
+const SOCIAL_FIELDS: { key: keyof NonNullable<FounderBlock["social"]>; label: string; placeholder: string }[] = [
+  { key: "instagram", label: "Instagram", placeholder: "https://instagram.com/yourhandle" },
+  { key: "youtube", label: "YouTube", placeholder: "https://youtube.com/@yourchannel" },
+  { key: "substack", label: "Substack", placeholder: "https://yourname.substack.com" },
+  { key: "linkedin", label: "LinkedIn", placeholder: "https://linkedin.com/in/yourname" },
+  { key: "twitter", label: "X / Twitter", placeholder: "https://x.com/yourhandle" },
+  { key: "website", label: "Personal Website", placeholder: "https://yoursite.com" },
+];
+
+function FounderEditor({ data, onChange }: { data: FounderBlock; onChange: (v: FounderBlock) => void }) {
+  return (
+    <div className="space-y-5">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <Field label="Full Name" value={data.name} onChange={(v) => onChange({ ...data, name: v })} placeholder="e.g. John Smith" />
+        <Field label="Title / Role" value={data.title} onChange={(v) => onChange({ ...data, title: v })} placeholder="e.g. Founder & CEO" />
+      </div>
+
+      <div className="space-y-2">
+        <ImageUpload
+          label="Profile Photo (upload or enter URL below)"
+          currentUrl={data.image_src}
+          onUploaded={(url) => onChange({ ...data, image_src: url })}
+        />
+        <Field
+          label="Or enter image URL manually"
+          value={data.image_src}
+          onChange={(v) => onChange({ ...data, image_src: v })}
+          placeholder="/images/founder.jpg or https://..."
+        />
+        <Field
+          label="Image Alt Text (SEO — describe the photo)"
+          value={data.image_alt}
+          onChange={(v) => onChange({ ...data, image_alt: v })}
+          placeholder="e.g. John Smith, founder of Acquire To Scale"
+        />
+      </div>
+
+      <Field
+        label="Bio"
+        value={data.bio}
+        onChange={(v) => onChange({ ...data, bio: v })}
+        multiline
+        placeholder={"Write your bio here...\n\nYou can use **bold**, _italic_, and [link text](https://url.com) for formatting.\nPress Enter twice for a new paragraph."}
+        hint="Supports **bold**, _italic_, and [link text](url). Press Enter twice for a new paragraph."
+      />
+
+      <div className="rounded-xl border border-[var(--border)] p-4 space-y-3">
+        <p className="text-xs font-semibold uppercase tracking-wider text-[var(--muted)]">
+          Social Links — leave blank to hide
+        </p>
+        {SOCIAL_FIELDS.map((field) => (
+          <div key={field.key} className="flex items-center gap-3">
+            <span className="w-24 shrink-0 text-xs font-medium text-[var(--muted)]">{field.label}</span>
+            <input
+              type="url"
+              value={data.social?.[field.key] ?? ""}
+              onChange={(e) => onChange({ ...data, social: { ...data.social, [field.key]: e.target.value } })}
+              placeholder={field.placeholder}
+              className="flex-1 rounded-lg border border-[var(--border)] bg-[var(--background)] px-3 py-2 text-sm text-[var(--foreground)] focus:border-[var(--accent)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/20"
+            />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 // ---------------------------------------------------------------------------
 // Generic block renderer — picks the right editor for the block type
 // ---------------------------------------------------------------------------
@@ -536,6 +605,8 @@ function BlockEditorInner({
       return <CardsEditor data={data as CardsBlock} onChange={(v) => onChange(v)} />;
     case "table":
       return <TableEditor data={data as TableBlock} onChange={(v) => onChange(v)} />;
+    case "founder":
+      return <FounderEditor data={data as FounderBlock} onChange={(v) => onChange(v)} />;
     default:
       return <RichTextEditor data={data as RichTextBlock} onChange={(v) => onChange(v)} />;
   }
