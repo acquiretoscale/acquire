@@ -57,6 +57,7 @@ body {
   --accent: #1d4ed8 !important;
   --accent-hover: #2563eb !important;
   --accent-light: #dbeafe;
+  color: var(--foreground);
 }
 
 /* Investor portal: dark background + particle canvas, matches main site */
@@ -107,6 +108,7 @@ body {
   --card-hover: #f1f5f9;
   --accent: #4CD1E3;
   --accent-hover: #6dd9e8;
+  color: var(--foreground);
 }
 
 html {
@@ -279,6 +281,11 @@ footer {
 }
 .blog-editor-wrapper .ql-editor {
   min-height: 280px;
+  color: #0f172a !important;
+  background: #ffffff !important;
+}
+.blog-editor-wrapper .ql-editor.ql-blank::before {
+  color: #94a3b8 !important;
 }
 /* Tables inside the editor — resizable */
 .blog-editor-wrapper .ql-editor table {

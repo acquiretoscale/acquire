@@ -71,11 +71,17 @@ export default async function AdminPage() {
               <div className="flex items-center gap-2">
                 <span className="font-medium text-[var(--foreground)]">{post.title}</span>
                 <span className="ml-1 text-sm text-[var(--muted)]">/blog/{post.slug}</span>
-                {post.status === "draft" ? (
+                {post.status === "draft" && (
                   <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-amber-700">
                     Draft
                   </span>
-                ) : (
+                )}
+                {post.status === "archived" && (
+                  <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-slate-600">
+                    Archived
+                  </span>
+                )}
+                {post.status !== "draft" && post.status !== "archived" && (
                   <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-emerald-700">
                     Published
                   </span>

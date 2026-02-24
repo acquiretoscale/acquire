@@ -100,7 +100,7 @@ export function PostForm({
   const [featured, setFeatured] = useState(post?.featured ?? false);
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
-  const [savingAs, setSavingAs] = useState<"draft" | "published" | null>(null);
+  const [savingAs, setSavingAs] = useState<"draft" | "published" | "archived" | null>(null);
   const [uploadingFeatured, setUploadingFeatured] = useState(false);
 
   /* Autosave state */
@@ -199,7 +199,7 @@ export function PostForm({
   }, [uploadImage]);
 
   /* ---- Submit (draft or publish) ---- */
-  async function handleSubmit(status: "draft" | "published") {
+  async function handleSubmit(status: "draft" | "published" | "archived") {
     setError(null);
     setSaving(true);
     setSavingAs(status);
@@ -435,6 +435,28 @@ export function PostForm({
         </div>
       </div>
 
+      {/* Current status badge (edit mode only) */}
+      {post && (
+        <div className="flex items-center gap-2 text-sm text-[var(--muted)]">
+          <span>Status:</span>
+          {post.status === "published" && (
+            <span className="rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-semibold uppercase tracking-wide text-emerald-700">
+              Published
+            </span>
+          )}
+          {post.status === "draft" && (
+            <span className="rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-semibold uppercase tracking-wide text-amber-700">
+              Draft
+            </span>
+          )}
+          {post.status === "archived" && (
+            <span className="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-semibold uppercase tracking-wide text-slate-600">
+              Archived
+            </span>
+          )}
+        </div>
+      )}
+
       {/* Action bar: autosave indicator + buttons */}
       <div className="flex flex-wrap items-center gap-3">
         {/* Publish */}
@@ -457,8 +479,36 @@ export function PostForm({
           onClick={() => handleSubmit("draft")}
           className="rounded-full border border-[var(--border)] px-5 py-2.5 font-medium text-[var(--foreground)] hover:bg-[var(--card-hover)] disabled:opacity-50"
         >
-          {saving && savingAs === "draft" ? "Saving…" : "Save draft"}
+          {saving && savingAs === "draft"
+            ? "Saving…"
+            : post?.status === "published"
+              ? "Unpublish"
+              : "Save draft"}
         </button>
+
+        {/* Archive (edit mode only) */}
+        {post && post.status !== "archived" && (
+          <button
+            type="button"
+            disabled={saving}
+            onClick={() => handleSubmit("archived")}
+            className="rounded-full border border-red-200 px-5 py-2.5 font-medium text-red-600 hover:bg-red-50 disabled:opacity-50"
+          >
+            {saving && savingAs === "archived" ? "Archiving…" : "Archive"}
+          </button>
+        )}
+
+        {/* Unarchive (edit mode, archived posts only) */}
+        {post && post.status === "archived" && (
+          <button
+            type="button"
+            disabled={saving}
+            onClick={() => handleSubmit("draft")}
+            className="rounded-full border border-amber-300 px-5 py-2.5 font-medium text-amber-700 hover:bg-amber-50 disabled:opacity-50"
+          >
+            {saving && savingAs === "draft" ? "Restoring…" : "Restore to draft"}
+          </button>
+        )}
 
         {/* Cancel */}
         <Link

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { site } from "@/lib/site";
 import { ProductHuntIcon } from "./ProductHuntIcon";
@@ -15,85 +15,102 @@ type NavItem = {
 export function MobileMenu() {
   const [isOpen, setIsOpen] = useState(false);
   const [expandedItem, setExpandedItem] = useState<string | null>(null);
+  const ref = useRef<HTMLDivElement>(null);
 
   const navItems = site.nav as unknown as NavItem[];
 
+  // Close on outside click
+  useEffect(() => {
+    function handleClick(e: MouseEvent) {
+      if (ref.current && !ref.current.contains(e.target as Node)) {
+        setIsOpen(false);
+        setExpandedItem(null);
+      }
+    }
+    if (isOpen) document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, [isOpen]);
+
+  // Close on Escape
+  useEffect(() => {
+    function handleKey(e: KeyboardEvent) {
+      if (e.key === "Escape") { setIsOpen(false); setExpandedItem(null); }
+    }
+    document.addEventListener("keydown", handleKey);
+    return () => document.removeEventListener("keydown", handleKey);
+  }, []);
+
+  const close = () => { setIsOpen(false); setExpandedItem(null); };
+
   return (
-    <>
+    <div ref={ref} className="relative md:hidden">
+      {/* Hamburger button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex flex-col gap-1.5 p-2 md:hidden"
-        aria-label="Toggle menu"
+        className="flex h-10 w-10 items-center justify-center rounded-lg text-white hover:bg-white/10 transition-colors"
+        aria-label={isOpen ? "Close menu" : "Open menu"}
         aria-expanded={isOpen}
       >
-        <span
-          className={`h-0.5 w-6 bg-white transition-all ${
-            isOpen ? "rotate-45 translate-y-2" : ""
-          }`}
-        />
-        <span
-          className={`h-0.5 w-6 bg-white transition-all ${
-            isOpen ? "opacity-0" : ""
-          }`}
-        />
-        <span
-          className={`h-0.5 w-6 bg-white transition-all ${
-            isOpen ? "-rotate-45 -translate-y-2" : ""
-          }`}
-        />
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+          {isOpen ? (
+            <>
+              <line x1="4" y1="4" x2="18" y2="18" />
+              <line x1="18" y1="4" x2="4" y2="18" />
+            </>
+          ) : (
+            <>
+              <line x1="3" y1="6" x2="19" y2="6" />
+              <line x1="3" y1="11" x2="19" y2="11" />
+              <line x1="3" y1="16" x2="19" y2="16" />
+            </>
+          )}
+        </svg>
       </button>
 
+      {/* Dropdown panel — positioned below the header, right-aligned */}
       {isOpen && (
-        <>
-          <div
-            className="fixed inset-0 z-40 bg-black/20 backdrop-blur-sm md:hidden"
-            onClick={() => setIsOpen(false)}
-            aria-hidden
-          />
-          <nav
-            className="fixed right-0 top-0 z-50 h-full w-64 overflow-y-auto border-l border-white/10 bg-[var(--surface-dark)] p-6 shadow-xl md:hidden"
-            aria-label="Mobile navigation"
-          >
-            <div className="flex flex-col gap-4">
+        <div
+          className="absolute right-0 top-[calc(100%+12px)] w-[min(300px,calc(100vw-24px))] rounded-2xl border border-white/10 bg-[#0d1f35] shadow-[0_20px_60px_rgba(0,0,0,0.5)] overflow-hidden"
+          role="dialog"
+          aria-label="Mobile navigation"
+        >
+          {/* Nav links */}
+          <nav className="px-2 py-2">
+            <ul className="flex flex-col" role="list">
               {navItems.map((item) => {
                 if (item.children && item.children.length > 0) {
                   const isExpanded = expandedItem === item.href;
                   return (
-                    <div key={item.href}>
-                      <div className="flex w-full items-center justify-between gap-2">
+                    <li key={item.href}>
+                      <div className="flex items-center rounded-xl">
                         <Link
                           href={item.href}
-                          onClick={() => setIsOpen(false)}
-                          className="text-lg font-medium text-white hover:text-[var(--on-dark-muted)]"
+                          onClick={close}
+                          className="flex-1 px-3 py-3 text-[15px] font-semibold text-white hover:text-[var(--accent)] transition-colors"
                         >
                           {item.label}
                         </Link>
                         <button
                           type="button"
                           onClick={() => setExpandedItem(isExpanded ? null : item.href)}
-                          className="shrink-0 p-1 text-white"
-                          aria-expanded={isExpanded}
-                          aria-label={`Toggle ${item.label} submenu`}
+                          className="h-11 w-11 shrink-0 flex items-center justify-center text-white/40 hover:text-white transition-colors"
+                          aria-label={`${isExpanded ? "Collapse" : "Expand"} ${item.label}`}
                         >
-                          <svg
-                            className={`h-5 w-5 transition ${isExpanded ? "rotate-180" : ""}`}
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                            strokeWidth={2}
-                          >
+                          <svg className={`h-4 w-4 transition-transform duration-200 ${isExpanded ? "rotate-180" : ""}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                             <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
                           </svg>
                         </button>
                       </div>
                       {isExpanded && (
-                        <ul className="mt-2 flex flex-col gap-1 border-l-2 border-white/20 pl-4" role="list">
+                        <ul className="mx-3 mb-1 border-l-2 border-white/10 pl-3" role="list">
                           {item.children.map((child) => (
-                            <li key={child.href}>
+                            <li key={`${child.href}-${child.label}`}>
                               <Link
                                 href={child.href}
-                                onClick={() => setIsOpen(false)}
-                                className={`block py-1.5 text-base hover:text-white ${child.prominent ? "font-semibold text-[var(--accent)]" : "text-[var(--on-dark-muted)]"}`}
+                                onClick={close}
+                                className={`block py-2.5 px-2 text-sm rounded-lg transition-colors hover:bg-white/5 ${
+                                  child.prominent ? "font-semibold text-[var(--accent)]" : "text-white/65 hover:text-white"
+                                }`}
                               >
                                 {child.label}
                               </Link>
@@ -101,32 +118,37 @@ export function MobileMenu() {
                           ))}
                         </ul>
                       )}
-                    </div>
+                    </li>
                   );
                 }
                 return (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    onClick={() => setIsOpen(false)}
-                    className="text-lg font-medium text-white hover:text-[var(--on-dark-muted)]"
-                  >
-                    {item.label}
-                  </Link>
+                  <li key={item.href}>
+                    <Link
+                      href={item.href}
+                      onClick={close}
+                      className="block px-3 py-3 text-[15px] font-semibold text-white hover:text-[var(--accent)] rounded-xl hover:bg-white/5 transition-colors"
+                    >
+                      {item.label}
+                    </Link>
+                  </li>
                 );
               })}
-              <Link
-                href="/investor-portal"
-                onClick={() => setIsOpen(false)}
-                className="mt-4 inline-flex h-11 items-center justify-center gap-2 rounded-full bg-[#f3e3ac] px-5 font-semibold text-[#5c4a1f] transition hover:bg-[#f5e8bd]"
-              >
-                <ProductHuntIcon className="h-5 w-5" />
-                Investor Portal
-              </Link>
-            </div>
+            </ul>
           </nav>
-        </>
+
+          {/* Divider + Investor Portal CTA */}
+          <div className="border-t border-white/10 p-3">
+            <Link
+              href="/investor-portal"
+              onClick={close}
+              className="flex h-11 w-full items-center justify-center gap-2 rounded-full bg-[#f3e3ac] text-sm font-semibold text-[#5c4a1f] hover:bg-[#f5e8bd] transition-colors"
+            >
+              <ProductHuntIcon className="h-5 w-5" />
+              Investor Portal
+            </Link>
+          </div>
+        </div>
       )}
-    </>
+    </div>
   );
 }

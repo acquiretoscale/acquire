@@ -94,17 +94,6 @@ export function SeoSettingsForm({ demoMode }: { demoMode: boolean }) {
         </div>
       )}
 
-      {message && (
-        <p
-          className={`rounded-lg p-3 text-sm ${
-            message.type === "success" ? "bg-emerald-50 text-emerald-800" : "bg-red-50 text-red-700"
-          }`}
-          role="alert"
-        >
-          {message.text}
-        </p>
-      )}
-
       {/* 1. AI-Friendly Content Optimization */}
       <section className="rounded-xl border border-[var(--border)] bg-[var(--card)] p-6">
         <h2 className="text-lg font-semibold text-[var(--foreground)]">
@@ -411,7 +400,7 @@ export function SeoSettingsForm({ demoMode }: { demoMode: boolean }) {
         </p>
       </section>
 
-      <div className="flex gap-3">
+      <div className="flex flex-wrap items-center gap-4">
         <button
           type="submit"
           disabled={saving}
@@ -419,6 +408,32 @@ export function SeoSettingsForm({ demoMode }: { demoMode: boolean }) {
         >
           {saving ? "Saving…" : "Save SEO settings"}
         </button>
+        {message && (
+          <div
+            role="alert"
+            className={`flex items-center gap-2 rounded-full px-4 py-2.5 text-sm font-medium ${
+              message.type === "success"
+                ? "bg-emerald-100 text-emerald-800"
+                : "bg-red-100 text-red-800"
+            }`}
+          >
+            {message.type === "success" ? (
+              <>
+                <svg className="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+                <span>{message.text}</span>
+              </>
+            ) : (
+              <>
+                <svg className="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+                <span>{message.text}</span>
+              </>
+            )}
+          </div>
+        )}
       </div>
     </form>
   );

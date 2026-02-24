@@ -7,7 +7,8 @@
     "dev:webpack": "next dev --webpack",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "db:migrate": "node scripts/run-supabase-migrations.js"
   },
   "dependencies": {
     "@supabase/ssr": "^0.5.2",
@@ -32,8 +33,10 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "dotenv": "^17.3.1",
     "eslint": "^9",
     "eslint-config-next": "16.1.4",
+    "pg": "^8.18.0",
     "tailwindcss": "^4",
     "typescript": "^5"
   }
