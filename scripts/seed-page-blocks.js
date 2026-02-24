@@ -39,15 +39,15 @@ const SEED_BLOCKS = [
   {
     page_slug: "home", block_key: "buyer_side", block_type: "list", sort_order: 3,
     content: {
-      title: "Founder title: "BUYER-SIDE" Business architect",
+      title: "BUYER-SIDE",
       intro: "Buy your first (or next) online business without the expensive lesson. We find the red flags marketplaces ignore and brokers hide.",
       items: [
-        { title: "Founder title: "Buyer fit assessment" Business architect", desc: "Ensuring the deal matches your capital, skills, and risk tolerance" },
-        { title: "Founder title: "Deal review & due diligence" Business architect", desc: "Filter bad deals fast: sanity checks, red flags, and risk assessment" },
-        { title: "Founder title: "Tech stack & traffic" Business architect", desc: "Scalability, automation potential, and ease of delegation post-acquisition" },
-        { title: "Founder title: "P&L & valuation" Business architect", desc: "Monetization quality, margins, and owner dependency" },
-        { title: "Founder title: "Post-acquisition operations & scaling" Business architect", desc: "What breaks, what to fix first, and where to focus" },
-        { title: "Founder title: "Deal sourcing" Business architect", desc: "Access to private and off-market opportunities" },
+        { title: "Buyer fit assessment", desc: "Ensuring the deal matches your capital, skills, and risk tolerance" },
+        { title: "Deal review & due diligence", desc: "Filter bad deals fast: sanity checks, red flags, and risk assessment" },
+        { title: "Tech stack & traffic", desc: "Scalability, automation potential, and ease of delegation post-acquisition" },
+        { title: "P&L & valuation", desc: "Monetization quality, margins, and owner dependency" },
+        { title: "Post-acquisition operations & scaling", desc: "What breaks, what to fix first, and where to focus" },
+        { title: "Deal sourcing", desc: "Access to private and off-market opportunities" },
       ],
       image_src: "/images/due-diligence-report.png",
       image_alt: "Comprehensive due diligence report showing SEO, P&L, MRR, and tech stack analysis",
@@ -57,15 +57,15 @@ const SEED_BLOCKS = [
   {
     page_slug: "home", block_key: "seller_side", block_type: "list", sort_order: 4,
     content: {
-      title: "Founder title: "SELLER-SIDE" Business architect",
+      title: "SELLER-SIDE",
       intro: "",
       items: [
-        { title: "Founder title: "Listing optimization" Business architect", desc: "Helping serious buyers see the real opportunity faster" },
-        { title: "Founder title: "Listing readiness audit" Business architect", desc: "Fixing documentation gaps that scare off buyers" },
-        { title: "Founder title: "Pre-sale fixes" Business architect", desc: "Quick wins to improve multiples before listing" },
-        { title: "Founder title: "Pre-exit scaling" Business architect", desc: "Mentorship to grow, structure, and scale your digital asset for an eventual exit" },
-        { title: "Founder title: "Strategic buyers" Business architect", desc: "Access to strategic buyers paying higher multiples" },
-        { title: "Founder title: "Network access (with conditions)*" Business architect", desc: "Anonymous introductions to qualified buyers in our network who are actively searching" },
+        { title: "Listing optimization", desc: "Helping serious buyers see the real opportunity faster" },
+        { title: "Listing readiness audit", desc: "Fixing documentation gaps that scare off buyers" },
+        { title: "Pre-sale fixes", desc: "Quick wins to improve multiples before listing" },
+        { title: "Pre-exit scaling", desc: "Mentorship to grow, structure, and scale your digital asset for an eventual exit" },
+        { title: "Strategic buyers", desc: "Access to strategic buyers paying higher multiples" },
+        { title: "Network access (with conditions)*", desc: "Anonymous introductions to qualified buyers in our network who are actively searching" },
       ],
       image_src: "/images/seller-services.png",
       image_alt: "Comprehensive seller services: documentation audit, pre-exit scaling, listing readiness, strategic buyer access",
@@ -176,10 +176,10 @@ const SEED_BLOCKS = [
     content: {
       heading: "Why Choose Acquire To Scale?",
       cards: [
-        { title: "Founder title: "Operator-Led Expertise" Business architect", desc: "Benefit from real-world experience in building, growing, and exiting digital businesses." },
-        { title: "Founder title: "Unbiased Due Diligence" Business architect", desc: "We work exclusively for buyers, ensuring our analysis is focused solely on your best interests." },
-        { title: "Founder title: "Focus on Scalability" Business architect", desc: "Our insights go beyond initial profitability, guiding you toward assets with long-term growth potential." },
-        { title: "Founder title: "Personalized Support" Business architect", desc: "From initial review to post-acquisition strategy, we are your trusted partner in the acquisition journey." },
+        { title: "Operator-Led Expertise", desc: "Benefit from real-world experience in building, growing, and exiting digital businesses." },
+        { title: "Unbiased Due Diligence", desc: "We work exclusively for buyers, ensuring our analysis is focused solely on your best interests." },
+        { title: "Focus on Scalability", desc: "Our insights go beyond initial profitability, guiding you toward assets with long-term growth potential." },
+        { title: "Personalized Support", desc: "From initial review to post-acquisition strategy, we are your trusted partner in the acquisition journey." },
       ],
     }
   },
