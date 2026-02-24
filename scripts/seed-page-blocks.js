@@ -123,6 +123,29 @@ const SEED_BLOCKS = [
     }
   },
 
+  {
+    page_slug: "home", block_key: "founder", block_type: "founder", sort_order: 9,
+    content: {
+      name: "Adil Maf",
+      title: "Founder & Business architect",
+      bio: "Adil is a **serial entrepreneur and investor**, and a board member of multiple seven-figure businesses. He brings real-world experience building, growing, and exiting digital companies.\n\nHe has mentored over 2,000 entrepreneurs across 60+ countries ([testimonials](https://adilmaf.com/testimonials)), and built across platforms a global audience of 40,000+ subscribers, where he shares tactical frameworks for online business growth.\n\nHis approach to due diligence is **operator-led** — the same framework he uses when evaluating deals for himself and his consulting clients.\n\nThrough Acquire To Scale, his mission is to provide the institutional-grade due diligence he wished he had when he began his own acquisition journey in 2011.",
+      image_src: "/images/adilmaf.png",
+      image_alt: "Adil Maf, Founder of Acquire To Scale",
+      social: {
+        instagram: "https://instagram.com/adil.maf",
+        youtube: "https://www.youtube.com/adilmaf",
+        substack: "https://acquiretoscale.substack.com",
+        linkedin: "",
+        twitter: "",
+        website: "",
+      },
+      social_stats: {
+        instagram: "21K followers",
+        youtube: "15K subscribers",
+      },
+    }
+  },
+
   // ─── ABOUT PAGE ──────────────────────────────────────────────────────────
   {
     page_slug: "about", block_key: "hero", block_type: "hero", sort_order: 0,
@@ -193,12 +216,22 @@ const SEED_BLOCKS = [
     }
   },
   {
-    page_slug: "about", block_key: "founder", block_type: "founder", sort_order: 6,
+    page_slug: "about", block_key: "company_intro", block_type: "rich_text", sort_order: 6,
+    content: {
+      heading: "About the company",
+      paragraphs: [
+        "**Acquire To Scale** is the missing layer between online marketplaces and traditional M&A firms. We help buyers and sellers of digital assets make informed decisions through rigorous due diligence, strategic clarity, and practical growth guidance.",
+        "From SaaS and content sites to newsletters and digital products, our focus is simple: **reduce risk, unlock value, and turn acquisitions into scalable outcomes.**",
+      ],
+    }
+  },
+  {
+    page_slug: "about", block_key: "founder", block_type: "founder", sort_order: 7,
     content: {
       name: "Adil Maf",
       title: "Founder & Business architect",
       bio: "Adil is a **serial entrepreneur and investor**, and a board member of multiple seven-figure businesses. He brings real-world experience building, growing, and exiting digital companies.\n\nHe has mentored over 2,000 entrepreneurs across 60+ countries ([testimonials](https://adilmaf.com/testimonials)), and built across platforms a global audience of 40,000+ subscribers, where he shares tactical frameworks for online business growth.\n\nHis approach to due diligence is **operator-led** — the same framework he uses when evaluating deals for himself and his consulting clients.\n\nThrough Acquire To Scale, his mission is to provide the institutional-grade due diligence he wished he had when he began his own acquisition journey in 2011.",
-      image_src: "",
+      image_src: "/images/adilmaf.png",
       image_alt: "Adil Maf, Founder of Acquire To Scale",
       social: {
         instagram: "https://instagram.com/adil.maf",
@@ -207,6 +240,10 @@ const SEED_BLOCKS = [
         linkedin: "",
         twitter: "",
         website: "",
+      },
+      social_stats: {
+        instagram: "21K followers",
+        youtube: "15K subscribers",
       },
     }
   },
