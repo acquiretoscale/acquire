@@ -45,6 +45,7 @@ const order = [
   join(migrationsDir, "migrations", "005_blog_featured.sql"),
   join(migrationsDir, "migrations", "006_site_settings_tracking_seo.sql"),
   join(migrationsDir, "migrations", "007_form_submissions.sql"),
+  join(migrationsDir, "migrations", "008_page_blocks.sql"),
 ];
 
 async function run() {

@@ -85,9 +85,10 @@ export const site = {
       ],
     },
     {
-      href: "/about",
+      href: "#",
       label: "About",
       children: [
+        { href: "/about", label: "About" },
         { href: "/about#our-mission", label: "Our Mission" },
         { href: "/career", label: "Career" },
         { href: "/contact", label: "Contact" },

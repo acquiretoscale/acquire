@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ASSET_TYPES } from "@/lib/due-diligence";
 import { AssetIcon } from "@/components/AssetIcon";
+import { getPageContent } from "@/lib/page-content";
+import type { HeroBlock, RichTextBlock, CtaBlock } from "@/lib/page-content";
 
 export const metadata: Metadata = {
   title: "Due Diligence",
@@ -12,24 +14,26 @@ export const metadata: Metadata = {
   },
 };
 
-export default function DueDiligencePage() {
+export default async function DueDiligencePage() {
+  const content = await getPageContent("for-buyers");
+  const hero = content.hero as HeroBlock;
+  const dealSourcing = content.deal_sourcing as RichTextBlock;
+  const cta = content.cta as CtaBlock;
+
   return (
     <div className="bg-[var(--background)] text-[var(--foreground)]">
-      {/* Intro — your exact copy, no hero */}
-      <section className="border-b border-[var(--border)] py-16 md:py-20">
+      {/* Intro */}
+      <section data-cms-block="for-buyers/hero" className="border-b border-[var(--border)] py-16 md:py-20">
         <div className="mx-auto max-w-3xl px-4">
           <p className="text-base font-medium uppercase tracking-wider text-[var(--muted)]">
-            Due Diligence
+            {hero.label}
           </p>
           <h1 className="mt-3 text-4xl font-bold tracking-tight md:text-5xl">
-            Your Path to Confident Online Business Acquisition
+            {hero.heading}
           </h1>
           <div className="mt-4 h-1 w-12 rounded-full bg-[var(--accent)]" aria-hidden />
           <p className="mt-6 text-lg leading-relaxed text-[var(--muted)]">
-            At Acquire To Scale, we provide operator-led expertise to help you navigate the online
-            business acquisition market with clarity and confidence. Whether you&apos;re seeking to
-            vet a specific asset, find your next opportunity, or strategize your growth, our
-            services are designed to ensure you acquire a business that truly scales.
+            {hero.subheading}
           </p>
           <p className="mt-4 font-medium text-[var(--foreground)]">
             Choose your path below to learn more about how we can support your acquisition journey:
@@ -37,7 +41,7 @@ export default function DueDiligencePage() {
         </div>
       </section>
 
-      {/* 1. Due Diligence by Asset Type — card grid, your text */}
+      {/* Due Diligence by Asset Type */}
       <section className="py-12 md:py-16">
         <div className="mx-auto max-w-6xl px-4">
           <h2 className="text-2xl font-bold tracking-tight text-[var(--foreground)] md:text-3xl">
@@ -70,19 +74,16 @@ export default function DueDiligencePage() {
         </div>
       </section>
 
-      {/* 2. Deal Sourcing & Private Deals Vault — your exact paragraph */}
-      <section id="deal-sourcing" className="border-t border-[var(--border)] bg-[var(--card-hover)] py-12 md:py-16">
+      {/* Deal Sourcing & Private Deals Vault */}
+      <section id="deal-sourcing" data-cms-block="for-buyers/deal_sourcing" className="border-t border-[var(--border)] bg-[var(--card-hover)] py-12 md:py-16">
         <div className="mx-auto max-w-6xl px-4">
           <div className="mx-auto max-w-4xl text-center">
             <div className="rounded-2xl border border-[var(--border)] bg-[var(--card)] p-8 shadow-sm md:p-10">
               <h2 className="text-2xl font-bold tracking-tight text-[var(--foreground)]">
-                Deal Sourcing & Private Deals Vault
+                {dealSourcing?.heading ?? "Deal Sourcing & Private Deals Vault"}
               </h2>
               <p className="mx-auto mt-6 max-w-2xl leading-relaxed text-[var(--muted)]">
-                Struggling to find quality deals? Leverage our extensive network and insights to
-                access exclusive opportunities. Our Private Deals Vault offers hand-picked,
-                screened, and vetted market and off-market deals that align with your investment
-                criteria.
+                {dealSourcing?.paragraphs?.[0] ?? "Access exclusive off-market deals and vetted opportunities."}
               </p>
               <Link
                 href="/buyer-form"
@@ -95,21 +96,23 @@ export default function DueDiligencePage() {
         </div>
       </section>
 
-      {/* CTA — your exact copy */}
-      <section className="border-t border-[var(--border)] py-12 md:py-16">
+      {/* CTA */}
+      <section data-cms-block="for-buyers/cta" className="border-t border-[var(--border)] py-12 md:py-16">
         <div className="mx-auto max-w-6xl px-4">
           <div className="flex flex-col items-start justify-between gap-6 rounded-2xl border border-[var(--border)] bg-[var(--card)] px-8 py-10 text-[var(--foreground)] md:flex-row md:items-center">
             <div>
-              <div className="text-xl font-bold tracking-tight text-[var(--foreground)]">Ready to start?</div>
+              <div className="text-xl font-bold tracking-tight text-[var(--foreground)]">
+                {cta?.heading ?? "Ready to start?"}
+              </div>
               <p className="mt-2 text-[var(--muted)]">
-                Get a buyer profile and matching plan tailored to your situation.
+                {cta?.body ?? "Get a buyer profile and matching plan tailored to your situation."}
               </p>
             </div>
             <Link
-              href="/buyer-form"
+              href={cta?.button?.href ?? "/buyer-form"}
               className="inline-flex h-12 items-center justify-center rounded-full bg-[var(--accent)] px-6 font-semibold text-white transition hover:bg-[var(--accent-hover)]"
             >
-              Book a call
+              {cta?.button?.label ?? "Book a call"}
             </Link>
           </div>
         </div>

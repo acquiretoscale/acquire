@@ -79,24 +79,18 @@ export function MobileMenu() {
             <ul className="flex flex-col" role="list">
               {navItems.map((item) => {
                 if (item.children && item.children.length > 0) {
-                  const isExpanded = expandedItem === item.href;
+                  const isExpanded = expandedItem === item.label;
                   return (
                     <li key={item.href}>
                       <div className="flex items-center rounded-xl">
-                        <Link
-                          href={item.href}
-                          onClick={close}
-                          className="flex-1 px-3 py-3 text-[15px] font-semibold text-white hover:text-[var(--accent)] transition-colors"
-                        >
-                          {item.label}
-                        </Link>
                         <button
                           type="button"
-                          onClick={() => setExpandedItem(isExpanded ? null : item.href)}
-                          className="h-11 w-11 shrink-0 flex items-center justify-center text-white/40 hover:text-white transition-colors"
-                          aria-label={`${isExpanded ? "Collapse" : "Expand"} ${item.label}`}
+                          onClick={() => setExpandedItem(isExpanded ? null : item.label)}
+                          className="flex flex-1 items-center justify-between px-3 py-3 text-[15px] font-semibold text-white hover:text-[var(--accent)] transition-colors"
+                          aria-expanded={isExpanded}
                         >
-                          <svg className={`h-4 w-4 transition-transform duration-200 ${isExpanded ? "rotate-180" : ""}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                          {item.label}
+                          <svg className={`h-4 w-4 transition-transform duration-200 ${isExpanded ? "rotate-180" : ""}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5} aria-hidden>
                             <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
                           </svg>
                         </button>

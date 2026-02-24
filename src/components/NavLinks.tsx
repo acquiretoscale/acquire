@@ -192,33 +192,29 @@ export function NavLinks({ items }: { items: NavItem[] }) {
           );
         }
         if (item.children && item.children.length > 0) {
-          const isOpen = openDropdown === item.href;
+          const isOpen = openDropdown === item.label;
           return (
             <div
-              key={item.href}
+              key={item.label}
               className="relative flex items-center"
-              onMouseEnter={() => setOpenDropdown(item.href)}
+              onMouseEnter={() => setOpenDropdown(item.label)}
             >
-              <Link
-                href={item.href}
-                className="text-[var(--on-dark-muted)] transition hover:text-white"
-              >
-                {item.label.toUpperCase()}
-              </Link>
               <button
                 type="button"
-                onClick={() => setOpenDropdown((v) => (v === item.href ? null : item.href))}
-                className="flex items-center p-1 text-[var(--on-dark-muted)] transition hover:text-white"
+                onClick={() => setOpenDropdown((v) => (v === item.label ? null : item.label))}
+                className="flex items-center gap-1 text-[var(--on-dark-muted)] transition hover:text-white focus:outline-none focus:ring-2 focus:ring-white/30 focus:ring-offset-2 focus:ring-offset-[var(--surface-dark)] rounded"
                 aria-expanded={isOpen}
                 aria-haspopup="true"
                 aria-label={`Toggle ${item.label} menu`}
               >
+                {item.label.toUpperCase()}
                 <svg
                   className={`h-4 w-4 transition ${isOpen ? "rotate-180" : ""}`}
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
                   strokeWidth={2}
+                  aria-hidden
                 >
                   <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
                 </svg>
@@ -233,7 +229,7 @@ export function NavLinks({ items }: { items: NavItem[] }) {
                     role="list"
                   >
                     {item.children.map((child) => (
-                      <li key={child.href}>
+                      <li key={`${child.href}-${child.label}`}>
                         <Link
                           href={child.href}
                           className={`block px-4 py-2.5 text-[13px] hover:bg-white/5 ${child.prominent ? "font-semibold text-[var(--accent)]" : "text-white"}`}

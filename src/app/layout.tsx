@@ -7,6 +7,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { CookieConsent } from "@/components/CookieConsent";
 
 import { SeoInject } from "@/components/SeoInject";
+import { AdminEditToolbar } from "@/components/AdminEditToolbar";
 import { site } from "@/lib/site";
 import { getSeoSettings } from "@/lib/seo-settings";
 
@@ -124,6 +125,7 @@ export default async function RootLayout({
           <main>{children}</main>
           <SiteFooter />
           <CookieConsent />
+          <AdminEditToolbar />
         </div>
       </body>
     </html>

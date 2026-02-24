@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { getPageContent } from "@/lib/page-content";
+import type { HeroBlock } from "@/lib/page-content";
 
 export const metadata: Metadata = {
   title: "Sell Your Business",
@@ -8,16 +10,19 @@ export const metadata: Metadata = {
   alternates: { canonical: "/sell-your-business" },
 };
 
-export default function SellYourBusinessPage() {
+export default async function SellYourBusinessPage() {
+  const content = await getPageContent("for-sellers");
+  const hero = content.hero as HeroBlock;
+
   return (
     <div className="bg-[var(--background)] text-[var(--foreground)]">
-      <section className="border-b border-[var(--border)] py-16 md:py-20">
+      <section data-cms-block="for-sellers/hero" className="border-b border-[var(--border)] py-16 md:py-20">
         <div className="mx-auto max-w-3xl px-4">
           <p className="text-base font-medium uppercase tracking-wider text-[var(--muted)]">
-            Sell your business
+            {hero.label}
           </p>
           <h1 className="mt-3 text-4xl font-bold tracking-tight md:text-5xl">
-            Sell your business
+            {hero.heading}
           </h1>
           <div className="mt-4 h-1 w-12 rounded-full bg-[var(--accent)]" aria-hidden />
           <div className="mt-8 space-y-6 text-lg leading-relaxed text-[var(--muted)]">
@@ -30,10 +35,10 @@ export default function SellYourBusinessPage() {
           </div>
           <div className="mt-10">
             <Link
-              href="/seller-form"
+              href={hero.cta_primary.href}
               className="inline-flex items-center gap-2 font-semibold text-[var(--accent)] transition hover:text-[var(--accent-hover)] hover:underline"
             >
-              Submit your business for review
+              {hero.cta_primary.label}
               <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
               </svg>
